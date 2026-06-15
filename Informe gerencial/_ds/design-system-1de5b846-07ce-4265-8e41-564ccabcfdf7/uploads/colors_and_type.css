@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Fail Fast Design System — Colors & Type
+   AI-first ERP. Innovation through simplicity.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* ---------- BRAND COLORS ---------- */
+  --ff-primary: #4361ff;          /* hero primary blue — page CTAs, links, brand */
+  --ff-primary-hover: #3a52e6;
+  --ff-primary-active: #2f45c7;
+  --ff-primary-soft: #7b9cff;     /* gradient partner, secondary accent */
+  --ff-primary-50: #eef1ff;       /* tinted backgrounds */
+  --ff-primary-100: #dbe2ff;
+  --ff-accent: #6366f1;           /* indigo accent (legacy) */
+
+  /* Demo-button tint: pale sky blue used for the "Book a demo" button */
+  --ff-demo-bg: #E3F2FD;
+  --ff-demo-bg-hover: #BBDEFB;
+  --ff-demo-fg: #1565C0;
+
+  /* ---------- NEUTRALS (Tailwind neutral scale, Notion-flavored) ----------
+     Body text sits on near-black #191919 (Notion's ink), surfaces use
+     neutral-50 / white, borders use neutral-200. */
+  --ff-bg: #ffffff;               /* card / hero background — pure white like Notion */
+  --ff-bg-page: #ffffff;          /* page — Notion is pure white, not tinted */
+  --ff-bg-muted: #f5f5f5;         /* neutral-100 — secondary surfaces, hover rows */
+  --ff-bg-subtle: #fafafa;        /* neutral-50 — subtlest wash */
+
+  --ff-fg: #191919;               /* Notion ink — the single most important token */
+  --ff-fg-strong: #0a0a0a;        /* neutral-950 — for headings that need extra weight */
+  --ff-fg-muted: #404040;         /* neutral-700 — secondary body */
+  --ff-fg-subtle: #737373;        /* neutral-500 — captions, metadata */
+  --ff-fg-faint: #a3a3a3;         /* neutral-400 — placeholder, disabled */
+
+  --ff-border: #e5e5e5;           /* neutral-200 — default hairline */
+  --ff-border-soft: rgba(0, 0, 0, 0.06);   /* Notion-style whisper divider */
+
+  /* ---------- SEMANTIC (curated, with life) ----------
+     Jewel-leaning hues with warm off-white pairings. Each accent sits around
+     45–55 L with real chroma so it has presence, but the backgrounds are
+     low-chroma warm tints (not stock #ECFDF5 etc.) so chips feel considered,
+     not loud. Foregrounds are darker siblings of the accent for readable text. */
+
+  --ff-success: #2f8560;           /* deep emerald — alive, not sage */
+  --ff-success-fg: #1f5a41;
+  --ff-success-bg: #e6f2eb;        /* warm mint off-white */
+  --ff-success-border: #b5d6c3;
+
+  --ff-warn: #d97a2b;               /* persimmon / marigold — warm, confident */
+  --ff-warn-fg: #8a4311;
+  --ff-warn-bg: #fcefde;            /* apricot cream */
+  --ff-warn-border: #f1c994;
+
+  --ff-danger: #d64545;             /* cinnabar — richer than brick */
+  --ff-danger-fg: #8a2424;
+  --ff-danger-bg: #fbe8e5;
+  --ff-danger-border: #f0b5ad;
+
+  --ff-info: #4b63b8;               /* iris blue — leans toward indigo */
+  --ff-info-fg: #2d3d7a;
+  --ff-info-bg: #ecefff;            /* pale periwinkle */
+  --ff-info-border: #c4cdf0;
+
+  --ff-accent-plum: #7b4a8c;        /* plum for premium / special tags */
+  --ff-accent-plum-bg: #f3ebf5;
+  --ff-accent-plum-border: #d9c4de;
+
+  --ff-neutral: #6b6b68;            /* warm graphite */
+  --ff-neutral-bg: #f4f3f0;         /* bone */
+  --ff-neutral-border: #dedcd6;
+
+  /* ---------- GRADIENTS (brand signature) ---------- */
+  --ff-gradient-primary: linear-gradient(to right, #4361ff, #7b9cff);
+  --ff-gradient-primary-strong: linear-gradient(to right, #4361ff, #5a7cff, #7b9cff);
+  --ff-gradient-hero-text: linear-gradient(to right, #4361ff, #7b9cff);
+  --ff-gradient-section: linear-gradient(to bottom, #ffffff, #f9fafb, #ffffff);
+
+  /* ---------- RADII ---------- */
+  --ff-radius-xs: 4px;
+  --ff-radius-sm: 6px;            /* inputs, small chips */
+  --ff-radius-md: 10px;            /* buttons default */
+  --ff-radius-lg: 12px;            /* cards */
+  --ff-radius-xl: 16px;            /* large cards */
+  --ff-radius-2xl: 24px;           /* marketing panels */
+  --ff-radius-full: 9999px;        /* header pill, pills, avatars */
+
+  /* ---------- SHADOWS (signature hairline + lift) ---------- */
+  --ff-shadow-sm: 0 0 0 1px rgba(15,15,15,0.05), 0 3px 6px rgba(15,15,15,0.1);
+  --ff-shadow-md: 0 0 0 1px rgba(15,15,15,0.05), 0 3px 6px rgba(15,15,15,0.1), 0 9px 24px rgba(15,15,15,0.2);
+  --ff-shadow-lg: 0 20px 60px rgba(15,15,15,0.15);
+  --ff-shadow-glow: 0 10px 30px -10px rgba(67, 97, 255, 0.35);
+
+  /* ---------- SPACING ---------- */
+  --ff-space-1: 4px;
+  --ff-space-2: 8px;
+  --ff-space-3: 12px;
+  --ff-space-4: 16px;
+  --ff-space-5: 20px;
+  --ff-space-6: 24px;
+  --ff-space-8: 32px;
+  --ff-space-10: 40px;
+  --ff-space-12: 48px;
+  --ff-space-16: 64px;
+  --ff-space-20: 80px;
+
+  /* ---------- TYPOGRAPHY ---------- */
+  --ff-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                  'Helvetica Neue', Arial, sans-serif;
+  --ff-font-serif: ui-serif, Georgia, 'Times New Roman', serif; /* used sparingly, e.g. quote pulls */
+  --ff-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Type scale (based on Inter, display-heavy marketing + app density) */
+  --ff-text-xs: 12px;       /* captions, meta */
+  --ff-text-sm: 14px;       /* body small, nav */
+  --ff-text-base: 16px;     /* body */
+  --ff-text-lg: 18px;       /* lead */
+  --ff-text-xl: 20px;       /* card title */
+  --ff-text-2xl: 24px;      /* section eyebrow */
+  --ff-text-3xl: 30px;      /* h3 */
+  --ff-text-4xl: 36px;      /* h2 small screens */
+  --ff-text-5xl: 48px;      /* h1 mid */
+  --ff-text-6xl: 60px;      /* display */
+  --ff-text-7xl: 72px;      /* hero display */
+
+  --ff-leading-tight: 1.1;
+  --ff-leading-snug: 1.25;
+  --ff-leading-normal: 1.5;
+  --ff-leading-relaxed: 1.625;
+
+  --ff-tracking-tight: -0.02em; /* display headings */
+  --ff-tracking-normal: 0;
+  --ff-tracking-wide: 0.02em;   /* eyebrows, uppercase labels */
+}
+
+/* ==========================================================================
+   Semantic type classes
+   ========================================================================== */
+
+html, body {
+  font-family: var(--ff-font-sans);
+  color: var(--ff-fg);
+  background: var(--ff-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ff-display {
+  font-family: var(--ff-font-sans);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw + 1rem, var(--ff-text-7xl));
+  line-height: var(--ff-leading-tight);
+  letter-spacing: var(--ff-tracking-tight);
+  color: var(--ff-fg-strong);
+}
+
+.ff-h1 {
+  font-family: var(--ff-font-sans);
+  font-weight: 700;
+  font-size: clamp(2rem, 3vw + 1rem, var(--ff-text-6xl));
+  line-height: var(--ff-leading-tight);
+  letter-spacing: var(--ff-tracking-tight);
+  color: var(--ff-fg-strong);
+}
+
+.ff-h2 {
+  font-family: var(--ff-font-sans);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 2vw + 1rem, var(--ff-text-5xl));
+  line-height: var(--ff-leading-tight);
+  letter-spacing: var(--ff-tracking-tight);
+  color: var(--ff-fg-strong);
+}
+
+.ff-h3 {
+  font-family: var(--ff-font-sans);
+  font-weight: 600;
+  font-size: var(--ff-text-3xl);
+  line-height: var(--ff-leading-snug);
+  letter-spacing: var(--ff-tracking-tight);
+  color: var(--ff-fg-strong);
+}
+
+.ff-h4 {
+  font-family: var(--ff-font-sans);
+  font-weight: 600;
+  font-size: var(--ff-text-xl);
+  line-height: var(--ff-leading-snug);
+  color: var(--ff-fg-strong);
+}
+
+.ff-lead {
+  font-size: var(--ff-text-lg);
+  line-height: var(--ff-leading-normal);
+  color: var(--ff-fg-muted);
+}
+
+.ff-body {
+  font-size: var(--ff-text-base);
+  line-height: var(--ff-leading-normal);
+  color: var(--ff-fg);
+}
+
+.ff-small {
+  font-size: var(--ff-text-sm);
+  line-height: var(--ff-leading-normal);
+  color: var(--ff-fg-muted);
+}
+
+.ff-caption {
+  font-size: var(--ff-text-xs);
+  line-height: var(--ff-leading-normal);
+  color: var(--ff-fg-subtle);
+  letter-spacing: var(--ff-tracking-wide);
+}
+
+.ff-eyebrow {
+  font-size: var(--ff-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ff-primary);
+}
+
+.ff-mono {
+  font-family: var(--ff-font-mono);
+  font-size: var(--ff-text-sm);
+}
+
+/* Signature gradient headline — use sparingly on a single clause */
+.ff-gradient-text {
+  background: var(--ff-gradient-hero-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

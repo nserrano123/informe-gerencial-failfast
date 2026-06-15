@@ -1,0 +1,13 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Dependencies (none required — static site)
+node_modules/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log

@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/design-system-1de5b846-07ce-4265-8e41-564ccabcfdf7/uploads/colors_and_type.css">
+  <script src="_ds/design-system-1de5b846-07ce-4265-8e41-564ccabcfdf7/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;background:#0A0A0A;}
+    input,select{font-family:'Inter',sans-serif;}
+    input[type=number]{-moz-appearance:textfield;}
+    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+    .cell{transition:border-color .12s,background .12s;}
+    .cell:focus{outline:none;border-color:#7B9CFF !important;background:#1b1b22 !important;color:#fff !important;}
+    .cell::placeholder{color:#3f3f46;}
+    select.cell option,select.ctrl option{background:#15151A;color:#E4E4E7;}
+    ::selection{background:#4361FF;color:#fff;}
+    .ffbtn{transition:background .12s,border-color .12s;}
+    .ffbtn:hover{background:#1b1b22 !important;border-color:#3f3f46 !important;}
+    .tabbtn{transition:background .12s,border-color .12s,color .12s;}
+    .delx:hover{color:#d64545 !important;}
+    input[type=date].cell{color-scheme:dark;}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;background:#0A0A0A;color:#FAFAFA;font-family:'Inter',sans-serif;padding:34px 44px 90px;">
+<div style="max-width:1480px;margin:0 auto;">
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px;">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:600 12px 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#7B9CFF;">Fail Fast · Centro de control comercial · Colombia</div>
+      <h1 style="margin:0;font:700 30px/1.05 'Inter',sans-serif;letter-spacing:-0.03em;color:#FAFAFA;">Pipeline, oportunidades entrantes y tablero del semestre</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:7px;font:500 12px 'Inter';color:#52525B;padding-right:4px;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0;"></span>Guardado en este navegador</span>
+      <button class="ffbtn" onClick="{{ exportBackup }}" title="Descargar un archivo de respaldo con todos tus datos" style="display:inline-flex;align-items:center;gap:7px;padding:10px 15px;border-radius:10px;background:#111113;border:1px solid #2c5450;color:#5fd0c5;font:600 13px 'Inter';cursor:pointer;">↓ Respaldo</button>
+      <button class="ffbtn" onClick="{{ triggerImport }}" title="Cargar un respaldo y restaurar tus datos" style="display:inline-flex;align-items:center;gap:7px;padding:10px 15px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#A1A1AA;font:600 13px 'Inter';cursor:pointer;">↑ Restaurar</button>
+      <input type="file" accept="application/json,.json" ref="{{ backupRef }}" onChange="{{ importBackup }}" style="display:none;"/>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;border-bottom:1px solid #1c1c22;padding-bottom:0;">
+    <button class="tabbtn" onClick="{{ goPipeline }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px 11px 0 0;border:1px solid {{ tabPipBorder }};border-bottom:none;background:{{ tabPipBg }};color:{{ tabPipCol }};font:600 14px 'Inter';cursor:pointer;">Embudo de ventas</button>
+    <button class="tabbtn" onClick="{{ goInbound }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px 11px 0 0;border:1px solid {{ tabInbBorder }};border-bottom:none;background:{{ tabInbBg }};color:{{ tabInbCol }};font:600 14px 'Inter';cursor:pointer;">Oportunidades entrantes <span style="font:700 11px 'JetBrains Mono';padding:2px 7px;border-radius:9999px;background:rgba(123,156,255,0.14);color:#7B9CFF;">{{ inbCount }}</span></button>
+    <button class="tabbtn" onClick="{{ goTracker }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px 11px 0 0;border:1px solid {{ tabTrkBorder }};border-bottom:none;background:{{ tabTrkBg }};color:{{ tabTrkCol }};font:600 14px 'Inter';cursor:pointer;">Tablero semanal</button>
+  </div>
+
+  <!-- ===================== PIPELINE ===================== -->
+  <sc-if value="{{ isPipeline }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px;">
+      <p style="margin:0;font:400 15px/1.5 'Inter';color:#A1A1AA;max-width:980px;">Universo objetivo de Colombia: TMS por departamento, IPS de Bogotá, Grandes Contribuyentes (DIAN) y la base de migración Simba WEB. Avanza cada empresa por etapas y ajusta su probabilidad; el embudo y el MRR probable se recalculan y se guardan en este navegador.</p>
+    </header>
+
+    <sc-if value="{{ pNotLoaded }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;justify-content:center;height:280px;color:#52525B;font:500 17px 'Inter';">Cargando universo de empresas…</div>
+    </sc-if>
+
+    <sc-if value="{{ pLoaded }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+        <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#7B9CFF;"></span><span style="font:700 19px 'Inter';color:#FAFAFA;">Transporte · TMS</span></div>
+            <div style="font:500 13px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ totT }} empresas · MRR prob. <span style="color:#7B9CFF;">{{ probTfmt }}</span></div>
+          </div>
+          <sc-for list="{{ funnelT }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:90px 1fr 96px;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+              <div style="height:36px;display:flex;align-items:center;"><div style="height:36px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 15px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+              <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:15px;padding-top:14px;border-top:1px solid #1f1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font:600 10px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#71717A;">Meta share</span>
+              <div style="display:flex;align-items:center;gap:3px;background:#0A0A0A;border:1px solid #2c2c32;border-radius:8px;padding:4px 9px;">
+                <input type="text" inputmode="numeric" value="{{ msTpct }}" onInput="{{ onMsT }}" style="width:30px;border:none;outline:none;background:transparent;color:#FAFAFA;font:700 15px 'JetBrains Mono';text-align:right;font-variant-numeric:tabular-nums;"/>
+                <span style="font:600 13px 'Inter';color:#71717A;">%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font:700 17px 'JetBrains Mono';color:#7B9CFF;font-variant-numeric:tabular-nums;line-height:1.15;">{{ msTval }}</div>
+              <div style="font:500 10px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ msTco }} empresas · MRR/mes</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#5fd0c5;"></span><span style="font:700 19px 'Inter';color:#FAFAFA;">Salud · IPS Bogotá</span></div>
+            <div style="font:500 13px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ totI }} empresas · MRR prob. <span style="color:#5fd0c5;">{{ probIfmt }}</span></div>
+          </div>
+          <sc-for list="{{ funnelI }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:90px 1fr 96px;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+              <div style="height:36px;display:flex;align-items:center;"><div style="height:36px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 15px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+              <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:15px;padding-top:14px;border-top:1px solid #1f1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font:600 10px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#71717A;">Meta share</span>
+              <div style="display:flex;align-items:center;gap:3px;background:#0A0A0A;border:1px solid #2c2c32;border-radius:8px;padding:4px 9px;">
+                <input type="text" inputmode="numeric" value="{{ msIpct }}" onInput="{{ onMsI }}" style="width:30px;border:none;outline:none;background:transparent;color:#FAFAFA;font:700 15px 'JetBrains Mono';text-align:right;font-variant-numeric:tabular-nums;"/>
+                <span style="font:600 13px 'Inter';color:#71717A;">%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font:700 17px 'JetBrains Mono';color:#5fd0c5;font-variant-numeric:tabular-nums;line-height:1.15;">{{ msIval }}</div>
+              <div style="font:500 10px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ msIco }} empresas · MRR/mes</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#e0a567;"></span><span style="font:700 18px 'Inter';color:#FAFAFA;">Grandes Contrib.</span></div>
+            <div style="font:500 12px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ totG }} · MRR prob. <span style="color:#e0a567;">{{ probGfmt }}</span></div>
+          </div>
+          <sc-for list="{{ funnelG }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:90px 1fr 96px;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+              <div style="height:36px;display:flex;align-items:center;"><div style="height:36px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 15px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+              <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:15px;padding-top:14px;border-top:1px solid #1f1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font:600 10px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#71717A;">Meta share</span>
+              <div style="display:flex;align-items:center;gap:3px;background:#0A0A0A;border:1px solid #2c2c32;border-radius:8px;padding:4px 9px;">
+                <input type="text" inputmode="numeric" value="{{ msGpct }}" onInput="{{ onMsG }}" style="width:30px;border:none;outline:none;background:transparent;color:#FAFAFA;font:700 15px 'JetBrains Mono';text-align:right;font-variant-numeric:tabular-nums;"/>
+                <span style="font:600 13px 'Inter';color:#71717A;">%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font:700 17px 'JetBrains Mono';color:#e0a567;font-variant-numeric:tabular-nums;line-height:1.15;">{{ msGval }}</div>
+              <div style="font:500 10px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ msGco }} empresas · MRR/mes</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#c792ea;"></span><span style="font:700 18px 'Inter';color:#FAFAFA;">Migración Simba WEB</span></div>
+            <div style="font:500 12px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ totS }} · MRR prob. <span style="color:#c792ea;">{{ probSfmt }}</span></div>
+          </div>
+          <sc-for list="{{ funnelS }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:90px 1fr 96px;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+              <div style="height:36px;display:flex;align-items:center;"><div style="height:36px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 15px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+              <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:15px;padding-top:14px;border-top:1px solid #1f1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font:600 10px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#71717A;">Meta share</span>
+              <div style="display:flex;align-items:center;gap:3px;background:#0A0A0A;border:1px solid #2c2c32;border-radius:8px;padding:4px 9px;">
+                <input type="text" inputmode="numeric" value="{{ msSpct }}" onInput="{{ onMsS }}" style="width:30px;border:none;outline:none;background:transparent;color:#FAFAFA;font:700 15px 'JetBrains Mono';text-align:right;font-variant-numeric:tabular-nums;"/>
+                <span style="font:600 13px 'Inter';color:#71717A;">%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font:700 17px 'JetBrains Mono';color:#c792ea;font-variant-numeric:tabular-nums;line-height:1.15;">{{ msSval }}</div>
+              <div style="font:500 10px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ msSco }} empresas · MRR/mes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px;">
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Empresas objetivo</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ totalEmpresas }}</div></div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">En pipeline activo</div><div style="font:700 26px 'Inter';color:#7B9CFF;font-variant-numeric:tabular-nums;">{{ activas }}</div></div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Adquiridas</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ ganadas }}</div></div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">MRR ganado</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ mrrGanadoFmt }}</div></div>
+        <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR probable</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ mrrProbableFmt }}</div></div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+        <button class="ffbtn" onClick="{{ addT }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #2d3a6b;color:#7B9CFF;font:600 14px 'Inter';cursor:pointer;">+ Transporte</button>
+        <button class="ffbtn" onClick="{{ addI }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #2d3a6b;color:#7B9CFF;font:600 14px 'Inter';cursor:pointer;">+ IPS</button>
+        <button class="ffbtn" onClick="{{ addG }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #5e4a2b;color:#e0a567;font:600 14px 'Inter';cursor:pointer;">+ Grande</button>
+        <button class="ffbtn" onClick="{{ addS }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #5b3f78;color:#c792ea;font:600 14px 'Inter';cursor:pointer;">+ Simba WEB</button>
+        <button class="ffbtn" onClick="{{ exportCsv }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#E4E4E7;font:600 14px 'Inter';cursor:pointer;">Exportar CSV</button>
+        <button class="ffbtn" onClick="{{ reset }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#71717A;font:600 14px 'Inter';cursor:pointer;">Reiniciar</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-top:22px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;">
+          <button class="ffbtn" onClick="{{ secT }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabTBorder }};background:{{ tabTBg }};color:{{ tabTCol }};font:600 14px 'Inter';cursor:pointer;">Transporte</button>
+          <button class="ffbtn" onClick="{{ secI }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabIBorder }};background:{{ tabIBg }};color:{{ tabICol }};font:600 14px 'Inter';cursor:pointer;">IPS</button>
+          <button class="ffbtn" onClick="{{ secG }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabGBorder }};background:{{ tabGBg }};color:{{ tabGCol }};font:600 14px 'Inter';cursor:pointer;">Grandes</button>
+          <button class="ffbtn" onClick="{{ secS }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabSBorder }};background:{{ tabSBg }};color:{{ tabSCol }};font:600 14px 'Inter';cursor:pointer;">Simba WEB</button>
+        </div>
+        <sc-if value="{{ showDept }}" hint-placeholder-val="{{ true }}">
+          <select class="ctrl" value="{{ deptValue }}" onChange="{{ onDept }}" style="padding:9px 14px;border-radius:9px;border:1px solid #27272A;background:#111113;color:#E4E4E7;font:600 13px 'Inter';cursor:pointer;min-width:230px;">
+            <sc-for list="{{ deptOptions }}" as="o" hint-placeholder-count="20"><option value="{{ o.val }}">{{ o.label }}</option></sc-for>
+          </select>
+        </sc-if>
+        <input class="cell" value="{{ query }}" onChange="{{ onQuery }}" oninput="{{ onQuery }}" placeholder="Buscar empresa…" style="flex:1;min-width:200px;max-width:320px;background:#111113;border:1px solid #27272A;border-radius:9px;padding:9px 14px;color:#E4E4E7;font:500 14px 'Inter';">
+        <span style="font:500 13px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;margin-left:auto;">{{ rangeFmt }}</span>
+      </div>
+
+      <div style="background:#111113;border:1px solid #27272A;border-radius:18px;overflow-x:auto;">
+        <div style="min-width:1320px;">
+          <div style="display:grid;grid-template-columns:52px 210px 108px 138px 112px 116px 56px 64px 56px 84px 70px 90px 30px;gap:0;align-items:center;padding:0 16px;height:44px;background:#15151A;border-bottom:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#71717A;">
+            <span>Sector</span><span>Empresa</span><span>Depto</span><span>Etapa</span><span>Fecha reunión</span><span>Responsable</span><span style="text-align:right;">Usu.</span><span style="text-align:right;">$/usu</span><span style="text-align:right;">Lic.</span><span style="text-align:right;">MRR</span><span style="text-align:right;">Prob.</span><span style="text-align:right;">MRR prob.</span><span></span>
+          </div>
+          <sc-for list="{{ pipeRows }}" as="c" hint-placeholder-count="20">
+            <div style="display:grid;grid-template-columns:52px 210px 108px 138px 112px 116px 56px 64px 56px 84px 70px 90px 30px;gap:0;align-items:center;padding:0 16px;height:48px;border-bottom:1px solid #16161a;font-variant-numeric:tabular-nums;">
+              <span><span style="display:inline-flex;align-items:center;gap:5px;font:600 10px 'JetBrains Mono';color:{{ c.sectorCol }};"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.sectorCol }};"></span>{{ c.sectorTag }}</span></span>
+              <span style="padding-right:10px;"><input class="cell" value="{{ c.nombre }}" data-id="{{ c.id }}" onChange="{{ onNombre }}" placeholder="Nombre de la empresa" style="width:100%;background:transparent;border:1px solid transparent;border-radius:7px;padding:6px 8px;color:#FAFAFA;font:600 13px 'Inter';"></span>
+              <span style="font:500 12px 'Inter';color:#71717A;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ c.depto }}</span>
+              <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
+              <span style="padding-right:8px;"><input class="cell" type="date" value="{{ c.fecha }}" data-id="{{ c.id }}" onChange="{{ onFecha }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:6px 7px;color:#A1A1AA;font:500 12px 'Inter';"></span>
+              <span style="padding-right:8px;"><input class="cell" value="{{ c.responsable }}" data-id="{{ c.id }}" onChange="{{ onResp }}" placeholder="Vendedor" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 8px;color:#E4E4E7;font:500 12px 'Inter';"></span>
+              <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.usuarios }}" data-id="{{ c.id }}" onChange="{{ onUsuarios }}" style="width:48px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+              <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.valorUsuario }}" data-id="{{ c.id }}" onChange="{{ onValor }}" style="width:52px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+              <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.licencia }}" data-id="{{ c.id }}" onChange="{{ onLic }}" style="width:46px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+              <span style="text-align:right;font:600 13px 'Inter';color:#E4E4E7;padding-right:8px;">{{ c.mrrFmt }}</span>
+              <span style="display:flex;align-items:center;justify-content:flex-end;gap:2px;padding-right:6px;"><input class="cell" type="number" value="{{ c.prob }}" data-id="{{ c.id }}" onChange="{{ onProb }}" style="width:42px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 5px;color:#A1A1AA;font:600 12px 'Inter';"><span style="font:600 11px 'JetBrains Mono';color:#52525B;">%</span></span>
+              <span style="text-align:right;font:700 13px 'Inter';color:#7B9CFF;padding-right:8px;">{{ c.mrrProbFmt }}</span>
+              <span style="text-align:center;"><span class="delx" onClick="{{ c.del }}" style="cursor:pointer;color:#52525B;font:600 18px 'Inter';line-height:1;">×</span></span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}"><div style="padding:40px;text-align:center;color:#52525B;font:500 15px 'Inter';">Sin resultados para la búsqueda.</div></sc-if>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:16px;flex-wrap:wrap;">
+        <span style="font:500 13px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ rangeFmt }}</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="ffbtn" onClick="{{ prevPage }}" style="padding:8px 16px;border-radius:9px;border:1px solid #27272A;background:#111113;color:#A1A1AA;font:600 13px 'Inter';cursor:pointer;">← Anterior</button>
+          <span style="font:600 13px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ pageLabel }}</span>
+          <button class="ffbtn" onClick="{{ nextPage }}" style="padding:8px 16px;border-radius:9px;border:1px solid #27272A;background:#111113;color:#A1A1AA;font:600 13px 'Inter';cursor:pointer;">Siguiente →</button>
+        </div>
+      </div>
+
+      <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1220px;">MRR = licencia + usuarios × $/usuario. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa (Contacto 5% · 1ª reunión 20% · Presentación 40% · Propuesta 60% · Adquirió 100%) y la puedes editar por empresa; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. $/usuario por defecto: Transporte $99, IPS $79. Grandes por defecto: licencia agente $100 + 5 usuarios × $99. Promedio asumido: 5 usuarios por empresa. Migración Simba WEB: $29/usuario × 2 = $58/cuenta por defecto ({{ totS }} empresas). Datos internos Fail Fast.</p>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ===================== OPORTUNIDADES ENTRANTES ===================== -->
+  <sc-if value="{{ isInbound }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px;">
+      <p style="margin:0;font:400 15px/1.5 'Inter';color:#A1A1AA;max-width:820px;">Registro de oportunidades que llegan por inbound, referidos o aliados. Captura sector, etapa, fecha de reunión, responsable, usuarios y valor; ajusta la probabilidad y el MRR probable se calcula solo. Se guarda en este navegador.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="ffbtn" onClick="{{ addInb }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #2d3a6b;color:#7B9CFF;font:600 14px 'Inter';cursor:pointer;">+ Nueva oportunidad</button>
+        <button class="ffbtn" onClick="{{ exportInb }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#E4E4E7;font:600 14px 'Inter';cursor:pointer;">Exportar CSV</button>
+        <button class="ffbtn" onClick="{{ resetInb }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#71717A;font:600 14px 'Inter';cursor:pointer;">Vaciar</button>
+      </div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
+      <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Oportunidades</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ inbCount }}</div></div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Reuniones agendadas</div><div style="font:700 26px 'Inter';color:#5fd0c5;font-variant-numeric:tabular-nums;">{{ inbReuniones }}</div></div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">MRR potencial</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ inbMrrFmt }}</div></div>
+      <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR probable</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ inbProbFmt }}</div></div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;overflow-x:auto;">
+      <div style="min-width:1200px;">
+        <div style="display:grid;grid-template-columns:130px 230px 140px 116px 128px 58px 66px 88px 70px 96px 30px;gap:0;align-items:center;padding:0 16px;height:44px;background:#15151A;border-bottom:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#71717A;">
+          <span>Sector</span><span>Empresa / contacto</span><span>Etapa</span><span>Fecha reunión</span><span>Responsable</span><span style="text-align:right;">Usu.</span><span style="text-align:right;">$/usu</span><span style="text-align:right;">MRR</span><span style="text-align:right;">Prob.</span><span style="text-align:right;">MRR prob.</span><span></span>
+        </div>
+        <sc-for list="{{ inbRows }}" as="c" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:130px 230px 140px 116px 128px 58px 66px 88px 70px 96px 30px;gap:0;align-items:center;padding:0 16px;height:48px;border-bottom:1px solid #16161a;font-variant-numeric:tabular-nums;">
+            <span style="padding-right:8px;"><select class="cell" value="{{ c.sector }}" data-id="{{ c.id }}" onChange="{{ onInbSector }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.sectorCol }};font:600 12px 'Inter';cursor:pointer;"><option value="transporte">Transporte</option><option value="ips">IPS</option><option value="grandes">Grandes</option><option value="simba">Simba WEB</option><option value="otro">Otro</option></select></span>
+            <span style="padding-right:10px;"><input class="cell" value="{{ c.nombre }}" data-id="{{ c.id }}" onChange="{{ onInbNombre }}" placeholder="Empresa o contacto" style="width:100%;background:transparent;border:1px solid transparent;border-radius:7px;padding:6px 8px;color:#FAFAFA;font:600 13px 'Inter';"></span>
+            <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onInbEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
+            <span style="padding-right:8px;"><input class="cell" type="date" value="{{ c.fecha }}" data-id="{{ c.id }}" onChange="{{ onInbFecha }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:6px 7px;color:#A1A1AA;font:500 12px 'Inter';"></span>
+            <span style="padding-right:8px;"><input class="cell" value="{{ c.responsable }}" data-id="{{ c.id }}" onChange="{{ onInbResp }}" placeholder="Responsable" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 8px;color:#E4E4E7;font:500 12px 'Inter';"></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.usuarios }}" data-id="{{ c.id }}" onChange="{{ onInbUsuarios }}" style="width:48px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.valorUsuario }}" data-id="{{ c.id }}" onChange="{{ onInbValor }}" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="text-align:right;font:600 13px 'Inter';color:#E4E4E7;padding-right:8px;">{{ c.mrrFmt }}</span>
+            <span style="display:flex;align-items:center;justify-content:flex-end;gap:2px;padding-right:6px;"><input class="cell" type="number" value="{{ c.prob }}" data-id="{{ c.id }}" onChange="{{ onInbProb }}" style="width:42px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 5px;color:#A1A1AA;font:600 12px 'Inter';"><span style="font:600 11px 'JetBrains Mono';color:#52525B;">%</span></span>
+            <span style="text-align:right;font:700 13px 'Inter';color:#7B9CFF;padding-right:8px;">{{ c.mrrProbFmt }}</span>
+            <span style="text-align:center;"><span class="delx" onClick="{{ c.del }}" style="cursor:pointer;color:#52525B;font:600 18px 'Inter';line-height:1;">×</span></span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ inbEmpty }}" hint-placeholder-val="{{ true }}"><div style="padding:48px;text-align:center;color:#52525B;font:500 15px 'Inter';">Aún no hay oportunidades entrantes. Pulsa <span style="color:#7B9CFF;">+ Nueva oportunidad</span> para registrar la primera.</div></sc-if>
+      </div>
+    </div>
+
+    <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1100px;">MRR = usuarios × $/usuario. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa y es editable por oportunidad; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. Usa este tab para los leads que entran y muévelos al embudo cuando se confirmen. Datos internos Fail Fast.</p>
+  </div>
+  </sc-if>
+
+  <!-- ===================== TABLERO SEMANAL ===================== -->
+  <sc-if value="{{ isTracker }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px;">
+      <p style="margin:0;font:400 15px/1.5 'Inter';color:#A1A1AA;max-width:760px;">Ingresa cada lunes el cumplimiento de la semana (celdas con borde azul). El tablero, la curva y el semáforo se actualizan solos y se guardan en este navegador. Camino a USD 100K MRR.</p>
+      <div style="display:flex;gap:10px;">
+        <button class="ffbtn" onClick="{{ exportTrk }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#E4E4E7;font:600 14px 'Inter';cursor:pointer;">Exportar CSV</button>
+        <button class="ffbtn" onClick="{{ resetTrk }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#A1A1AA;font:600 14px 'Inter';cursor:pointer;">Reiniciar</button>
+      </div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:24px;">
+      <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#7B9CFF;margin-bottom:10px;">MRR actual</div>
+        <div style="font:700 30px/1 'Inter';color:#FFF;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ mrrActualFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#71717A;margin-top:8px;">Semana {{ semActual }} de 26</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">Plan a la fecha</div>
+        <div style="font:700 30px/1 'Inter';color:#E4E4E7;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ planToDateFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">presupuesto semana {{ semActual }}</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">vs Plan</div>
+        <div style="font:700 30px/1 'Inter';letter-spacing:-0.02em;font-variant-numeric:tabular-nums;color:{{ vsPlanCol }};">{{ vsPlanFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">real menos plan</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">% de la meta</div>
+        <div style="font:700 30px/1 'Inter';color:#7B9CFF;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ pctMetaFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">de USD 100K</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">WoW real</div>
+        <div style="font:700 30px/1 'Inter';letter-spacing:-0.02em;font-variant-numeric:tabular-nums;color:{{ wowCol }};">{{ wowRealFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">requerido ~6.4%</div>
+      </div>
+      <div style="background:#111113;border:1px solid {{ estadoBorder }};border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">Estado</div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:50%;background:{{ estadoCol }};box-shadow:0 0 12px {{ estadoCol }};flex-shrink:0;"></span><span style="font:700 21px/1 'Inter';color:#FFF;">{{ estadoLabel }}</span></div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:10px;">{{ cierresAcum }} cierres · plan {{ cierresPlanFmt }}</div>
+      </div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:26px 28px 18px;margin-top:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
+        <div style="font:600 16px 'Inter';color:#FAFAFA;">Curva MRR · Plan vs Real</div>
+        <div style="display:flex;gap:20px;font:500 13px 'Inter';color:#A1A1AA;">
+          <span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:22px;height:0;border-top:2.5px dashed #5b5b7a;display:inline-block;"></span>Plan (presupuesto)</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;border-radius:2px;background:#7B9CFF;display:inline-block;"></span>Real ingresado</span>
+        </div>
+      </div>
+      {{ chart }}
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:26px 28px;margin-top:18px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div style="font:600 16px 'Inter';color:#FAFAFA;">Avance por motor · logos hacia la meta del semestre</div>
+        <div style="font:600 14px 'Inter';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ totalLogos }} <span style="color:#52525B;">/ 170 logos · {{ totalPctFmt }}</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">IPS Nivel 1</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segIps.sum }}/15</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segIps.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Transporte TMS</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segTransp.sum }}/20</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segTransp.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Grandes · agente</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segGrandes.sum }}/40</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segGrandes.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Aliados · Simba</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segAliados.sum }}/95</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segAliados.barW }};"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;margin-top:18px;overflow:hidden;">
+      <div style="padding:22px 28px 16px;font:600 16px 'Inter';color:#FAFAFA;">Captura semanal <span style="font:400 14px 'Inter';color:#71717A;">— llena las celdas azules</span></div>
+      <div style="overflow-x:auto;"><div style="min-width:986px;">
+      <div style="display:grid;grid-template-columns:50px 100px 116px 96px 84px 70px 70px 70px 70px 64px 96px;gap:0;align-items:center;padding:0 18px;height:42px;background:#15151A;border-top:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#71717A;">
+        <span>Sem</span><span style="text-align:right;">Plan</span><span style="text-align:right;color:#7B9CFF;">MRR real</span><span style="text-align:right;">Var</span><span style="text-align:right;">WoW</span><span style="text-align:right;color:#7B9CFF;">IPS</span><span style="text-align:right;color:#7B9CFF;">Transp</span><span style="text-align:right;color:#7B9CFF;">Grand</span><span style="text-align:right;color:#7B9CFF;">Alia</span><span style="text-align:right;">Σ</span><span style="text-align:right;">Estado</span>
+      </div>
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="26">
+        <div style="display:grid;grid-template-columns:50px 100px 116px 96px 84px 70px 70px 70px 70px 64px 96px;gap:0;align-items:center;padding:0 18px;height:46px;border-top:1px solid #16161a;font-variant-numeric:tabular-nums;background:{{ r.rowBg }};">
+          <span style="font:600 14px 'Inter';color:#71717A;">{{ r.sem }}</span>
+          <span style="text-align:right;font:500 14px 'Inter';color:#71717A;">{{ r.planFmt }}</span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.real }}" data-i="{{ r.i }}" onChange="{{ onMrr }}" placeholder="—" style="width:96px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 9px;color:#E4E4E7;font:600 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;font:600 13px 'Inter';color:{{ r.varCol }};">{{ r.varFmt }}</span>
+          <span style="text-align:right;font:600 13px 'Inter';color:{{ r.wowCol }};">{{ r.wowFmt }}</span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.ips }}" data-i="{{ r.i }}" onChange="{{ onIps }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.transp }}" data-i="{{ r.i }}" onChange="{{ onTransp }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.grandes }}" data-i="{{ r.i }}" onChange="{{ onGrandes }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.aliados }}" data-i="{{ r.i }}" onChange="{{ onAliados }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;font:600 14px 'Inter';color:#A1A1AA;">{{ r.cierresSem }}</span>
+          <span style="text-align:right;"><span style="display:inline-block;padding:4px 10px;border-radius:9999px;font:600 11px 'JetBrains Mono';letter-spacing:.04em;background:{{ r.estadoBg }};color:{{ r.estadoCol }};">{{ r.estado }}</span></span>
+        </div>
+      </sc-for>
+      </div></div>
+    </div>
+
+    <p style="margin:22px 2px 0;font:400 13px/1.5 'Inter';color:#52525B;max-width:1100px;">Plan = curva YC de $20K a $100K en 26 semanas (~6.4% WoW). El semáforo compara tu MRR real contra el plan de esa semana: <span style="color:#3fb950;">en meta</span> ≥ plan · <span style="color:#e0a567;">cerca</span> a &lt;10% · <span style="color:#d64545;">atrasado</span> &gt;10%. Datos internos Fail Fast.</p>
+  </div>
+  </sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  // ---------- pipeline config ----------
+  PKEY = 'ff_pipeline_v2';
+  PAGE = 50;
+  ORDER = ['contacto', 'reunion', 'presentacion', 'propuesta', 'ganada'];
+  PROB = { contacto: 0.05, reunion: 0.20, presentacion: 0.40, propuesta: 0.60, ganada: 1, perdida: 0 };
+  LABEL = { contacto: 'Contacto', reunion: '1ª reunión', presentacion: 'Presentación', propuesta: 'Propuesta', ganada: 'Adquirió', perdida: 'No adquirió' };
+  STAGECOL = { contacto: '#3a4a78', reunion: '#45579c', presentacion: '#5169c4', propuesta: '#7B9CFF', ganada: '#3fb950' };
+
+  // ---------- inbound config ----------
+  IKEY = 'ff_inbound_v1';
+  MSKEY = 'ff_market_share_v1';
+
+  // ---------- tracker config ----------
+  GOAL = 100000;
+  START = 20000;
+  WOW_REQ = 0.0638575;
+  TKEY = 'ff_tracker_v1';
+  TARGETS = { ips: 15, transp: 20, grandes: 40, aliados: 95 };
+  PLAN = [
+    { w:0, mrr:20000, cum:0 }, { w:1, mrr:21277, cum:2.7 }, { w:2, mrr:22636, cum:5.6 },
+    { w:3, mrr:24081, cum:8.7 }, { w:4, mrr:25619, cum:11.9 }, { w:5, mrr:27255, cum:15.4 },
+    { w:6, mrr:28996, cum:19.1 }, { w:7, mrr:30847, cum:23.1 }, { w:8, mrr:32817, cum:27.2 },
+    { w:9, mrr:34913, cum:31.7 }, { w:10, mrr:37142, cum:36.4 }, { w:11, mrr:39514, cum:41.5 },
+    { w:12, mrr:42037, cum:46.8 }, { w:13, mrr:44721, cum:52.5 }, { w:14, mrr:47577, cum:58.6 },
+    { w:15, mrr:50615, cum:65.1 }, { w:16, mrr:53847, cum:71.9 }, { w:17, mrr:57286, cum:79.2 },
+    { w:18, mrr:60944, cum:87 }, { w:19, mrr:64836, cum:95.3 }, { w:20, mrr:68976, cum:104.1 },
+    { w:21, mrr:73381, cum:113.4 }, { w:22, mrr:78067, cum:123.4 }, { w:23, mrr:83052, cum:134 },
+    { w:24, mrr:88355, cum:145.3 }, { w:25, mrr:93998, cum:157.2 }, { w:26, mrr:100000, cum:170 }
+  ];
+
+  seed = [];
+  depts = [];
+  state = {
+    tab: 'pipeline',
+    loaded: false, sector: 'transporte', dept: 'Cundinamarca', query: '', page: 0, prog: this.loadProg(),
+    inbound: this.loadInbound(),
+    ms: this.loadMs(),
+    weeks: this.loadWeeks()
+  };
+
+  componentDidMount() {
+    this.applyDeepLink();
+    window.addEventListener('hashchange', () => this.applyDeepLink());
+    fetch('pipeline_seed.json').then((r) => r.json()).then((d) => {
+      this.seed = (d.companies || []).map((c) => ({ id: c.id, s: c.s, d: c.d, n: c.n }));
+      this.depts = d.deptsTMS || [];
+      this.setState({ loaded: true });
+    }).catch(() => this.setState({ loaded: true }));
+  }
+
+  applyDeepLink() {
+    try {
+      const valid = ['transporte', 'ips', 'grandes', 'simba'];
+      let s = null;
+      const hash = (window.location.hash || '').replace(/^#/, '');
+      const hp = new URLSearchParams(hash);
+      const qp = new URLSearchParams(window.location.search || '');
+      s = hp.get('sector') || qp.get('sector');
+      if (s && valid.includes(s)) {
+        this.setState({ tab: 'pipeline', sector: s, dept: s === 'transporte' ? 'Todos' : this.state.dept, query: '', page: 0 });
+      }
+    } catch (e) {}
+  }
+
+  f(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+  clampPct(n) { n = Number(n); if (isNaN(n)) n = 0; return Math.max(0, Math.min(100, n)); }
+  probFrac(c) { return c.p != null ? c.p / 100 : (this.PROB[c.e] ?? 0); }
+  probPct(c) { return c.p != null ? c.p : Math.round((this.PROB[c.e] ?? 0) * 100); }
+
+  // ================= PIPELINE =================
+  loadProg() { try { const r = localStorage.getItem(this.PKEY); if (r) { const o = JSON.parse(r); return { ov: o.ov || {}, add: o.add || [], del: o.del || [] }; } } catch (e) {} return { ov: {}, add: [], del: [] }; }
+  persistP(prog) { try { localStorage.setItem(this.PKEY, JSON.stringify(prog)); } catch (e) {} }
+
+  defVal(s) { return s === 'ips' ? 49 : (s === 'simba' ? 29 : 99); }
+  defUsuarios(s) { return s === 'simba' ? 2 : (s === 'ips' ? 3 : 5); }
+  defLic(s) { return s === 'grandes' ? 100 : 0; }
+  mrrOf(c) { return (Number(c.l) || 0) + (Number(c.u) || 0) * (Number(c.v) || 0); }
+
+  // ---------- market share target ----------
+  dealMrr(s) { return this.defLic(s) + this.defUsuarios(s) * this.defVal(s); }
+  loadMs() { const d = { transporte: 5, ips: 5, grandes: 5, simba: 5 }; try { const r = localStorage.getItem(this.MSKEY); if (r) { const o = JSON.parse(r); return { ...d, ...o }; } } catch (e) {} return d; }
+  persistMs(ms) { try { localStorage.setItem(this.MSKEY, JSON.stringify(ms)); } catch (e) {} }
+  setMs(sector, raw) { const ms = { ...this.state.ms, [sector]: this.clampPct(raw) }; this.persistMs(ms); this.setState({ ms }); }
+  msFor(sector, total) { const pct = this.state.ms[sector] ?? 5; const co = Math.round(total * pct / 100); return { pct, co, valFmt: this.f(co * this.dealMrr(sector)) }; }
+
+  // ---------- respaldo / backup ----------
+  backupRef = React.createRef();
+  exportBackup() {
+    try {
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf('ff_') === 0) data[k] = localStorage.getItem(k);
+      }
+      const payload = { app: 'failfast-tablero', version: 1, savedAt: new Date().toISOString(), data };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'failfast-respaldo-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch (e) { window.alert('No se pudo generar el respaldo.'); }
+  }
+  triggerImport() { const el = this.backupRef.current; if (el) { el.value = ''; el.click(); } }
+  importBackup(ev) {
+    const file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const data = parsed && parsed.data ? parsed.data : parsed;
+        const keys = data && typeof data === 'object' ? Object.keys(data).filter((k) => k.indexOf('ff_') === 0) : [];
+        if (!keys.length) { window.alert('El archivo no contiene un respaldo válido.'); return; }
+        if (!window.confirm('Restaurar reemplazará los datos actuales de este navegador con los del respaldo. ¿Continuar?')) return;
+        keys.forEach((k) => { try { localStorage.setItem(k, data[k]); } catch (e) {} });
+        window.location.reload();
+      } catch (e) { window.alert('No se pudo leer el archivo de respaldo.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  allCompanies() {
+    const prog = this.state.prog;
+    const del = new Set(prog.del);
+    const base = [...prog.add, ...this.seed].filter((c) => !del.has(c.id));
+    return base.map((c) => {
+      const o = prog.ov[c.id] || {};
+      return { id: c.id, s: c.s, d: c.d, n: o.n != null ? o.n : c.n, e: o.e || 'contacto', f: o.f || '', r: o.r || '', u: o.u != null ? o.u : this.defUsuarios(c.s), v: o.v != null ? o.v : this.defVal(c.s), l: o.l != null ? o.l : this.defLic(c.s), p: o.p != null ? o.p : null };
+    });
+  }
+
+  setField(id, field, raw) {
+    let v = raw;
+    if (field === 'u' || field === 'v' || field === 'l') { v = raw === '' ? 0 : Number(raw); if (isNaN(v)) v = 0; }
+    if (field === 'p') { v = raw === '' ? null : this.clampPct(raw); }
+    const prog = this.state.prog;
+    prog.ov[id] = { ...(prog.ov[id] || {}), [field]: v };
+    this.persistP(prog);
+    this.setState({ prog: { ...prog } });
+  }
+  addRow(sector) {
+    const prog = this.state.prog;
+    const id = 'u' + Date.now() + Math.floor(Math.random() * 1000);
+    const dept = sector === 'transporte' ? (this.state.dept === 'Todos' ? 'Cundinamarca' : this.state.dept) : (sector === 'grandes' ? 'NIT —' : (sector === 'simba' ? 'Simba WEB' : 'Bogotá D.C.'));
+    prog.add = [{ id, s: sector, d: dept, n: '' }, ...prog.add];
+    this.persistP(prog);
+    this.setState({ prog: { ...prog }, sector, query: '', page: 0 });
+  }
+  delRow(id) {
+    const prog = this.state.prog;
+    if (prog.add.some((c) => c.id === id)) prog.add = prog.add.filter((c) => c.id !== id);
+    else if (!prog.del.includes(id)) prog.del = [...prog.del, id];
+    if (prog.ov[id]) delete prog.ov[id];
+    this.persistP(prog);
+    this.setState({ prog: { ...prog } });
+  }
+
+  funnelFor(list) {
+    const total = list.length;
+    return this.ORDER.map((stage, i) => {
+      const inStage = list.filter((c) => { if (i === 0) return true; if (c.e === 'perdida') return false; return this.ORDER.indexOf(c.e) >= i; });
+      const money = inStage.reduce((a, c) => a + this.mrrOf(c), 0);
+      const widthPct = total > 0 ? (inStage.length === 0 ? '0%' : Math.max(13, inStage.length / total * 100).toFixed(1) + '%') : '0%';
+      return { key: stage, label: this.LABEL[stage], count: inStage.length, moneyFmt: money > 0 ? this.f(money) : '—', widthPct, color: this.STAGECOL[stage] };
+    });
+  }
+
+  csvPipeline() {
+    const all = this.allCompanies();
+    const head = ['Empresa', 'Sector', 'Departamento', 'Etapa', 'Fecha reunion', 'Responsable', 'Usuarios', 'Valor por usuario', 'Licencia agente', 'MRR', 'Probabilidad %', 'MRR probable'];
+    const lines = [head.join(',')];
+    all.forEach((c) => {
+      const mrr = this.mrrOf(c);
+      const prob = Math.round(mrr * this.probFrac(c));
+      const q = (s) => '"' + String(s).replace(/"/g, '""') + '"';
+      lines.push([q(c.n), c.s, q(c.d), this.LABEL[c.e], c.f, q(c.r), c.u, c.v, (Number(c.l) || 0), mrr, this.probPct(c), prob].join(','));
+    });
+    this.download(lines.join('\n'), 'pipeline-ventas-failfast.csv');
+  }
+
+  // ================= INBOUND =================
+  loadInbound() { try { const r = localStorage.getItem(this.IKEY); if (r) { const a = JSON.parse(r); if (Array.isArray(a)) return a; } } catch (e) {} return []; }
+  persistI(list) { try { localStorage.setItem(this.IKEY, JSON.stringify(list)); } catch (e) {} }
+  mrrUV(c) { return (Number(c.u) || 0) * (Number(c.v) || 0); }
+  addInbound() {
+    const id = 'in' + Date.now() + Math.floor(Math.random() * 1000);
+    const row = { id, n: '', s: 'transporte', e: 'contacto', f: '', r: '', u: 5, v: 99, p: null };
+    const list = [row, ...this.state.inbound];
+    this.persistI(list);
+    this.setState({ inbound: list });
+  }
+  setInbound(id, field, raw) {
+    let v = raw;
+    if (field === 'u' || field === 'v') { v = raw === '' ? 0 : Number(raw); if (isNaN(v)) v = 0; }
+    if (field === 'p') { v = raw === '' ? null : this.clampPct(raw); }
+    const list = this.state.inbound.map((c) => c.id === id ? { ...c, [field]: v } : c);
+    this.persistI(list);
+    this.setState({ inbound: list });
+  }
+  delInbound(id) {
+    const list = this.state.inbound.filter((c) => c.id !== id);
+    this.persistI(list);
+    this.setState({ inbound: list });
+  }
+  csvInbound() {
+    const head = ['Empresa', 'Sector', 'Etapa', 'Fecha reunion', 'Responsable', 'Usuarios', 'Valor por usuario', 'MRR', 'Probabilidad %', 'MRR probable'];
+    const lines = [head.join(',')];
+    this.state.inbound.forEach((c) => {
+      const mrr = this.mrrUV(c);
+      const prob = Math.round(mrr * this.probFrac(c));
+      const q = (s) => '"' + String(s).replace(/"/g, '""') + '"';
+      lines.push([q(c.n), c.s, this.LABEL[c.e], c.f, q(c.r), c.u, c.v, mrr, this.probPct(c), prob].join(','));
+    });
+    this.download(lines.join('\n'), 'oportunidades-entrantes-failfast.csv');
+  }
+
+  download(text, name) {
+    try {
+      const blob = new Blob([text], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {}
+  }
+
+  // ================= TRACKER =================
+  freshWeeks() { return Array.from({ length: 26 }, () => ({ mrr: null, ips: null, transp: null, grandes: null, aliados: null })); }
+  loadWeeks() {
+    try { const raw = localStorage.getItem(this.TKEY); if (raw) { const a = JSON.parse(raw); if (Array.isArray(a) && a.length === 26) return a; } } catch (e) {}
+    return this.freshWeeks();
+  }
+  persistT(weeks) { try { localStorage.setItem(this.TKEY, JSON.stringify(weeks)); } catch (e) {} }
+  setCell(i, field, raw) {
+    const num = (raw === '' || raw == null) ? null : Number(raw);
+    this.setState((s) => {
+      const weeks = s.weeks.map((w, idx) => idx === i ? { ...w, [field]: (num != null && isNaN(num)) ? null : num } : w);
+      this.persistT(weeks);
+      return { weeks };
+    });
+  }
+  num(v) { return (v == null || v === '') ? null : Number(v); }
+
+  buildChart(weeks) {
+    const R = React.createElement;
+    const W = 1000, H = 320, padL = 60, padR = 22, padT = 16, padB = 30;
+    const x0 = padL, x1 = W - padR, y0 = H - padB, y1 = padT;
+    const sx = (w) => x0 + (w / 26) * (x1 - x0);
+    const sy = (v) => y0 - (v / this.GOAL) * (y0 - y1);
+    const kids = [];
+    const ticks = [0, 20000, 40000, 60000, 80000, 100000];
+    ticks.forEach((t) => {
+      const y = sy(t);
+      kids.push(R('line', { key: 'g' + t, x1: x0, x2: x1, y1: y, y2: y, stroke: t === 100000 ? '#33334a' : '#1c1c22', strokeWidth: 1, strokeDasharray: t === 100000 ? '5 5' : null }));
+      kids.push(R('text', { key: 'gt' + t, x: x0 - 10, y: y + 4, textAnchor: 'end', fill: '#52525B', fontSize: 12, fontFamily: 'JetBrains Mono' }, t === 0 ? '$0' : '$' + (t / 1000) + 'K'));
+    });
+    for (let w = 0; w <= 26; w += 2) {
+      kids.push(R('text', { key: 'x' + w, x: sx(w), y: y0 + 19, textAnchor: 'middle', fill: '#52525B', fontSize: 11, fontFamily: 'JetBrains Mono' }, 'S' + w));
+    }
+    const planPts = this.PLAN.map((p) => sx(p.w).toFixed(1) + ',' + sy(p.mrr).toFixed(1)).join(' ');
+    const realArr = [{ w: 0, v: this.START }];
+    weeks.forEach((wk, i) => { const v = this.num(wk.mrr); if (v != null) realArr.push({ w: i + 1, v }); });
+    const realPts = realArr.map((p) => sx(p.w).toFixed(1) + ',' + sy(p.v).toFixed(1)).join(' ');
+    kids.push(R('defs', { key: 'defs' }, R('linearGradient', { id: 'rg', x1: 0, y1: 0, x2: 0, y2: 1 },
+      R('stop', { offset: '0%', stopColor: '#7B9CFF', stopOpacity: 0.32 }),
+      R('stop', { offset: '100%', stopColor: '#7B9CFF', stopOpacity: 0 }))));
+    kids.push(R('polyline', { key: 'plan', points: planPts, fill: 'none', stroke: '#5b5b7a', strokeWidth: 2.5, strokeDasharray: '6 5' }));
+    if (realArr.length > 1) {
+      const area = sx(realArr[0].w).toFixed(1) + ',' + y0 + ' ' + realPts + ' ' + sx(realArr[realArr.length - 1].w).toFixed(1) + ',' + y0;
+      kids.push(R('polygon', { key: 'area', points: area, fill: 'url(#rg)' }));
+      kids.push(R('polyline', { key: 'real', points: realPts, fill: 'none', stroke: '#7B9CFF', strokeWidth: 3, strokeLinejoin: 'round' }));
+    }
+    realArr.forEach((p, idx) => {
+      const last = idx === realArr.length - 1;
+      kids.push(R('circle', { key: 'c' + idx, cx: sx(p.w), cy: sy(p.v), r: last ? 5.5 : 3.5, fill: last ? '#FFFFFF' : '#7B9CFF', stroke: '#7B9CFF', strokeWidth: last ? 3 : 0 }));
+    });
+    return R('svg', { viewBox: '0 0 ' + W + ' ' + H, style: { width: '100%', height: 'auto', display: 'block' } }, kids);
+  }
+
+  csvTracker() {
+    const rows = [['Semana', 'Plan MRR', 'MRR real', 'Var', 'WoW', 'IPS', 'Transporte', 'Grandes', 'Aliados', 'Cierres semana']];
+    this.state.weeks.forEach((w, i) => {
+      const plan = this.PLAN[i + 1].mrr;
+      const real = this.num(w.mrr);
+      const prev = i === 0 ? this.START : this.num(this.state.weeks[i - 1].mrr);
+      const wow = (real != null && prev != null && prev > 0) ? ((real - prev) / prev * 100).toFixed(2) + '%' : '';
+      const cs = (this.num(w.ips) || 0) + (this.num(w.transp) || 0) + (this.num(w.grandes) || 0) + (this.num(w.aliados) || 0);
+      rows.push([i + 1, plan, real ?? '', real != null ? real - plan : '', wow, w.ips ?? '', w.transp ?? '', w.grandes ?? '', w.aliados ?? '', cs]);
+    });
+    this.download(rows.map((r) => r.join(',')).join('\n'), 'cumplimiento-semanal-failfast.csv');
+  }
+
+  // ================= RENDER =================
+  renderVals() {
+    const st = this.state;
+    const tab = st.tab;
+    const mkTab = (on) => ({ bg: on ? 'rgba(123,156,255,0.10)' : 'transparent', border: on ? '#4361FF' : '#27272A', col: on ? '#FAFAFA' : '#71717A' });
+    const tp = mkTab(tab === 'pipeline'), ti2 = mkTab(tab === 'inbound'), tt2 = mkTab(tab === 'tracker');
+
+    const base = {
+      isPipeline: tab === 'pipeline', isInbound: tab === 'inbound', isTracker: tab === 'tracker',
+      goPipeline: () => this.setState({ tab: 'pipeline' }),
+      goInbound: () => this.setState({ tab: 'inbound' }),
+      goTracker: () => this.setState({ tab: 'tracker' }),
+      tabPipBg: tp.bg, tabPipBorder: tp.border, tabPipCol: tp.col,
+      tabInbBg: ti2.bg, tabInbBorder: ti2.border, tabInbCol: ti2.col,
+      tabTrkBg: tt2.bg, tabTrkBorder: tt2.border, tabTrkCol: tt2.col,
+      inbCount: st.inbound.length
+    };
+
+    return { ...base, ...this.pipelineVals(), ...this.inboundVals(), ...this.trackerVals() };
+  }
+
+  pipelineVals() {
+    const st = this.state;
+    if (!st.loaded) return { pNotLoaded: true, pLoaded: false };
+    const all = this.allCompanies();
+    const tList = all.filter((c) => c.s === 'transporte');
+    const iList = all.filter((c) => c.s === 'ips');
+    const gList = all.filter((c) => c.s === 'grandes');
+    const sList = all.filter((c) => c.s === 'simba');
+    const probSum = (l) => l.reduce((a, c) => a + this.mrrOf(c) * this.probFrac(c), 0);
+    const ganadas = all.filter((c) => c.e === 'ganada').length;
+    const perdidas = all.filter((c) => c.e === 'perdida').length;
+    const mrrGanado = all.filter((c) => c.e === 'ganada').reduce((a, c) => a + this.mrrOf(c), 0);
+
+    let scope = all.filter((c) => c.s === st.sector);
+    if (st.sector === 'transporte' && st.dept !== 'Todos') scope = scope.filter((c) => c.d === st.dept);
+    const q = (st.query || '').trim().toLowerCase();
+    if (q) scope = scope.filter((c) => c.n.toLowerCase().includes(q));
+    const total = scope.length;
+    const pageCount = Math.max(1, Math.ceil(total / this.PAGE));
+    const page = Math.min(st.page, pageCount - 1);
+    const start = page * this.PAGE;
+    const pageItems = scope.slice(start, start + this.PAGE);
+
+    const rows = pageItems.map((c) => {
+      const mrr = this.mrrOf(c);
+      const prob = mrr * this.probFrac(c);
+      return {
+        id: c.id, nombre: c.n, depto: c.d, etapa: c.e, fecha: c.f, responsable: c.r, usuarios: c.u, valorUsuario: c.v, licencia: c.l, prob: this.probPct(c),
+        sectorTag: c.s === 'transporte' ? 'TMS' : (c.s === 'ips' ? 'IPS' : (c.s === 'simba' ? 'SW' : 'GC')), sectorCol: c.s === 'transporte' ? '#7B9CFF' : (c.s === 'ips' ? '#5fd0c5' : (c.s === 'simba' ? '#c792ea' : '#e0a567')),
+        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : '#E4E4E7'),
+        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : '#15151A'),
+        mrrFmt: this.f(mrr), mrrProbFmt: this.f(prob),
+        del: () => this.delRow(c.id)
+      };
+    });
+
+    const deptOptions = [{ val: 'Todos', label: 'Todos los deptos · ' + tList.length }].concat(
+      this.depts.map((o) => ({ val: o.d, label: o.d + ' · ' + o.c }))
+    );
+
+    const sTab = (on) => ({ Bg: on ? 'rgba(123,156,255,0.12)' : '#111113', Border: on ? '#4361FF' : '#27272A', Col: on ? '#7B9CFF' : '#A1A1AA' });
+    const tt = sTab(st.sector === 'transporte'), tiX = sTab(st.sector === 'ips'), tg = sTab(st.sector === 'grandes');
+    const tsX = { Bg: st.sector === 'simba' ? 'rgba(199,146,234,0.14)' : '#111113', Border: st.sector === 'simba' ? '#8b5fb5' : '#27272A', Col: st.sector === 'simba' ? '#c792ea' : '#A1A1AA' };
+    const rangeFmt = total === 0 ? '0 empresas' : (start + 1).toLocaleString('en-US') + '–' + Math.min(start + this.PAGE, total).toLocaleString('en-US') + ' de ' + total.toLocaleString('en-US');
+
+    return {
+      pLoaded: true, pNotLoaded: false,
+      funnelT: this.funnelFor(tList), funnelI: this.funnelFor(iList), funnelG: this.funnelFor(gList), funnelS: this.funnelFor(sList),
+      totT: tList.length, totI: iList.length, totG: gList.length, totS: sList.length,
+      msTpct: this.msFor('transporte', tList.length).pct, msTco: this.msFor('transporte', tList.length).co, msTval: this.msFor('transporte', tList.length).valFmt,
+      msIpct: this.msFor('ips', iList.length).pct, msIco: this.msFor('ips', iList.length).co, msIval: this.msFor('ips', iList.length).valFmt,
+      msGpct: this.msFor('grandes', gList.length).pct, msGco: this.msFor('grandes', gList.length).co, msGval: this.msFor('grandes', gList.length).valFmt,
+      msSpct: this.msFor('simba', sList.length).pct, msSco: this.msFor('simba', sList.length).co, msSval: this.msFor('simba', sList.length).valFmt,
+      onMsT: (e) => this.setMs('transporte', e.target.value), onMsI: (e) => this.setMs('ips', e.target.value),
+      onMsG: (e) => this.setMs('grandes', e.target.value), onMsS: (e) => this.setMs('simba', e.target.value),
+      probTfmt: this.f(probSum(tList)), probIfmt: this.f(probSum(iList)), probGfmt: this.f(probSum(gList)), probSfmt: this.f(probSum(sList)),
+      totalEmpresas: all.length, activas: all.length - ganadas - perdidas, ganadas,
+      mrrGanadoFmt: this.f(mrrGanado), mrrProbableFmt: this.f(probSum(all)),
+      pipeRows: rows, empty: total === 0,
+      showDept: st.sector === 'transporte', deptValue: st.dept, deptOptions, query: st.query,
+      tabTBg: tt.Bg, tabTBorder: tt.Border, tabTCol: tt.Col,
+      tabIBg: tiX.Bg, tabIBorder: tiX.Border, tabICol: tiX.Col,
+      tabGBg: tg.Bg, tabGBorder: tg.Border, tabGCol: tg.Col,
+      tabSBg: tsX.Bg, tabSBorder: tsX.Border, tabSCol: tsX.Col,
+      rangeFmt, pageLabel: 'Pág. ' + (page + 1) + ' / ' + pageCount,
+      addT: () => this.addRow('transporte'), addI: () => this.addRow('ips'), addG: () => this.addRow('grandes'), addS: () => this.addRow('simba'),
+      secT: () => this.setState({ sector: 'transporte', page: 0 }),
+      secI: () => this.setState({ sector: 'ips', page: 0 }),
+      secG: () => this.setState({ sector: 'grandes', page: 0 }),
+      secS: () => this.setState({ sector: 'simba', page: 0 }),
+      onDept: (e) => this.setState({ dept: e.target.value, page: 0 }),
+      onQuery: (e) => this.setState({ query: e.target.value, page: 0 }),
+      prevPage: () => this.setState((s) => ({ page: Math.max(0, s.page - 1) })),
+      nextPage: () => this.setState((s) => ({ page: Math.min(pageCount - 1, s.page + 1) })),
+      onNombre: (e) => this.setField(e.target.dataset.id, 'n', e.target.value),
+      onEtapa: (e) => this.setField(e.target.dataset.id, 'e', e.target.value),
+      onFecha: (e) => this.setField(e.target.dataset.id, 'f', e.target.value),
+      onResp: (e) => this.setField(e.target.dataset.id, 'r', e.target.value),
+      onUsuarios: (e) => this.setField(e.target.dataset.id, 'u', e.target.value),
+      onValor: (e) => this.setField(e.target.dataset.id, 'v', e.target.value),
+      onLic: (e) => this.setField(e.target.dataset.id, 'l', e.target.value),
+      onProb: (e) => this.setField(e.target.dataset.id, 'p', e.target.value),
+      exportCsv: () => this.csvPipeline(),
+      exportBackup: () => this.exportBackup(),
+      triggerImport: () => this.triggerImport(),
+      importBackup: (e) => this.importBackup(e),
+      backupRef: this.backupRef,
+      reset: () => { if (window.confirm('¿Borrar todo tu avance y volver al universo original?')) { const p = { ov: {}, add: [], del: [] }; this.persistP(p); this.setState({ prog: p, sector: 'transporte', dept: 'Cundinamarca', query: '', page: 0 }); } }
+    };
+  }
+
+  inboundVals() {
+    const list = this.state.inbound;
+    const sectorCol = (s) => s === 'transporte' ? '#7B9CFF' : (s === 'ips' ? '#5fd0c5' : (s === 'grandes' ? '#e0a567' : (s === 'simba' ? '#c792ea' : '#A1A1AA')));
+    const rows = list.map((c) => {
+      const mrr = this.mrrUV(c);
+      const prob = mrr * this.probFrac(c);
+      return {
+        id: c.id, nombre: c.n, sector: c.s, etapa: c.e, fecha: c.f, responsable: c.r, usuarios: c.u, valorUsuario: c.v, prob: this.probPct(c),
+        sectorCol: sectorCol(c.s),
+        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : '#E4E4E7'),
+        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : '#15151A'),
+        mrrFmt: this.f(mrr), mrrProbFmt: this.f(prob),
+        del: () => this.delInbound(c.id)
+      };
+    });
+    const mrrTotal = list.reduce((a, c) => a + this.mrrUV(c), 0);
+    const probTotal = list.reduce((a, c) => a + this.mrrUV(c) * this.probFrac(c), 0);
+    const reuniones = list.filter((c) => c.f && c.f.length > 0).length;
+    return {
+      inbRows: rows, inbEmpty: list.length === 0,
+      inbReuniones: reuniones, inbMrrFmt: this.f(mrrTotal), inbProbFmt: this.f(probTotal),
+      addInb: () => this.addInbound(),
+      exportInb: () => this.csvInbound(),
+      resetInb: () => { if (window.confirm('¿Vaciar todas las oportunidades entrantes?')) { this.persistI([]); this.setState({ inbound: [] }); } },
+      onInbSector: (e) => this.setInbound(e.target.dataset.id, 's', e.target.value),
+      onInbNombre: (e) => this.setInbound(e.target.dataset.id, 'n', e.target.value),
+      onInbEtapa: (e) => this.setInbound(e.target.dataset.id, 'e', e.target.value),
+      onInbFecha: (e) => this.setInbound(e.target.dataset.id, 'f', e.target.value),
+      onInbResp: (e) => this.setInbound(e.target.dataset.id, 'r', e.target.value),
+      onInbUsuarios: (e) => this.setInbound(e.target.dataset.id, 'u', e.target.value),
+      onInbValor: (e) => this.setInbound(e.target.dataset.id, 'v', e.target.value),
+      onInbProb: (e) => this.setInbound(e.target.dataset.id, 'p', e.target.value)
+    };
+  }
+
+  trackerVals() {
+    const weeks = this.state.weeks;
+    let lastIdx = -1;
+    for (let i = 0; i < weeks.length; i++) if (this.num(weeks[i].mrr) != null) lastIdx = i;
+
+    const mrrActual = lastIdx >= 0 ? this.num(weeks[lastIdx].mrr) : this.START;
+    const planToDate = this.PLAN[lastIdx + 1 >= 0 ? lastIdx + 1 : 0].mrr;
+    const vsPlan = mrrActual - planToDate;
+    const pctMeta = mrrActual / this.GOAL;
+    let prev = lastIdx <= 0 ? this.START : this.num(weeks[lastIdx - 1].mrr);
+    const wowReal = (lastIdx >= 0 && prev != null && prev > 0) ? (mrrActual - prev) / prev : null;
+
+    let estadoLabel = 'Sin datos', estadoCol = '#52525B', estadoBorder = '#27272A';
+    if (lastIdx >= 0) {
+      if (mrrActual >= planToDate) { estadoLabel = 'En meta'; estadoCol = '#3fb950'; estadoBorder = 'rgba(63,185,80,0.5)'; }
+      else if (mrrActual >= planToDate * 0.9) { estadoLabel = 'Cerca'; estadoCol = '#e0a567'; estadoBorder = 'rgba(224,165,103,0.5)'; }
+      else { estadoLabel = 'Atrasado'; estadoCol = '#d64545'; estadoBorder = 'rgba(214,69,69,0.5)'; }
+    }
+
+    const sumF = (f) => weeks.reduce((a, w) => a + (this.num(w[f]) || 0), 0);
+    const seg = (f, t) => { const sum = sumF(f); return { sum, target: t, barW: Math.min(100, t ? sum / t * 100 : 0).toFixed(0) + '%' }; };
+    const segIps = seg('ips', 15), segTransp = seg('transp', 20), segGrandes = seg('grandes', 40), segAliados = seg('aliados', 95);
+    const totalLogos = segIps.sum + segTransp.sum + segGrandes.sum + segAliados.sum;
+    const cierresPlan = lastIdx >= 0 ? this.PLAN[lastIdx + 1].cum : 0;
+
+    const rows = weeks.map((w, i) => {
+      const plan = this.PLAN[i + 1].mrr;
+      const real = this.num(w.mrr);
+      const p = i === 0 ? this.START : this.num(weeks[i - 1].mrr);
+      const wow = (real != null && p != null && p > 0) ? (real - p) / p : null;
+      const cs = (this.num(w.ips) || 0) + (this.num(w.transp) || 0) + (this.num(w.grandes) || 0) + (this.num(w.aliados) || 0);
+      const vm = real != null ? real - plan : null;
+      let estado = '—', col = '#52525B', bg = 'rgba(82,82,91,0.12)';
+      if (real != null) {
+        if (real >= plan) { estado = 'En meta'; col = '#3fb950'; bg = 'rgba(63,185,80,0.13)'; }
+        else if (real >= plan * 0.9) { estado = 'Cerca'; col = '#e0a567'; bg = 'rgba(224,165,103,0.13)'; }
+        else { estado = 'Atrasado'; col = '#d64545'; bg = 'rgba(214,69,69,0.13)'; }
+      }
+      return {
+        i, sem: i + 1, planFmt: this.f(plan),
+        real: w.mrr == null ? '' : w.mrr,
+        ips: w.ips == null ? '' : w.ips, transp: w.transp == null ? '' : w.transp,
+        grandes: w.grandes == null ? '' : w.grandes, aliados: w.aliados == null ? '' : w.aliados,
+        varFmt: vm == null ? '—' : (vm >= 0 ? '+' : '') + this.f(vm),
+        varCol: vm == null ? '#52525B' : (vm >= 0 ? '#3fb950' : '#d64545'),
+        wowFmt: (real != null && wow != null) ? (wow >= 0 ? '+' : '') + (wow * 100).toFixed(1) + '%' : '—',
+        wowCol: (real != null && wow != null) ? (wow >= this.WOW_REQ ? '#3fb950' : wow >= 0 ? '#e0a567' : '#d64545') : '#52525B',
+        cierresSem: cs, estado, estadoCol: col, estadoBg: bg,
+        rowBg: (i === lastIdx) ? 'rgba(123,156,255,0.05)' : 'transparent'
+      };
+    });
+
+    return {
+      chart: this.buildChart(weeks),
+      rows,
+      semActual: lastIdx >= 0 ? lastIdx + 1 : 0,
+      mrrActualFmt: this.f(mrrActual),
+      planToDateFmt: this.f(planToDate),
+      vsPlanFmt: (vsPlan >= 0 ? '+' : '') + this.f(vsPlan),
+      vsPlanCol: lastIdx < 0 ? '#52525B' : (vsPlan >= 0 ? '#3fb950' : '#d64545'),
+      pctMetaFmt: (pctMeta * 100).toFixed(1) + '%',
+      wowRealFmt: wowReal == null ? '—' : (wowReal >= 0 ? '+' : '') + (wowReal * 100).toFixed(1) + '%',
+      wowCol: wowReal == null ? '#52525B' : (wowReal >= this.WOW_REQ ? '#3fb950' : wowReal >= 0 ? '#e0a567' : '#d64545'),
+      estadoLabel, estadoCol, estadoBorder,
+      cierresAcum: totalLogos, cierresPlanFmt: cierresPlan.toFixed(0),
+      segIps, segTransp, segGrandes, segAliados,
+      totalLogos, totalPctFmt: (totalLogos / 170 * 100).toFixed(0) + '%',
+      onMrr: (e) => this.setCell(Number(e.target.dataset.i), 'mrr', e.target.value),
+      onIps: (e) => this.setCell(Number(e.target.dataset.i), 'ips', e.target.value),
+      onTransp: (e) => this.setCell(Number(e.target.dataset.i), 'transp', e.target.value),
+      onGrandes: (e) => this.setCell(Number(e.target.dataset.i), 'grandes', e.target.value),
+      onAliados: (e) => this.setCell(Number(e.target.dataset.i), 'aliados', e.target.value),
+      exportTrk: () => this.csvTracker(),
+      resetTrk: () => { if (window.confirm('¿Borrar todos los datos ingresados? Esta acción no se puede deshacer.')) { const w = this.freshWeeks(); this.persistT(w); this.setState({ weeks: w }); } }
+    };
+  }
+}
+</script>
+</body>
+</html>

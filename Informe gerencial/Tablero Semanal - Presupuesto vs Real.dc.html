@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/design-system-1de5b846-07ce-4265-8e41-564ccabcfdf7/uploads/colors_and_type.css">
+  <script src="_ds/design-system-1de5b846-07ce-4265-8e41-564ccabcfdf7/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;background:#0A0A0A;}
+    input[type=number]{-moz-appearance:textfield;}
+    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+    input.cell{transition:border-color .12s,background .12s;}
+    input.cell:focus{outline:none;border-color:#7B9CFF !important;background:#1b1b22 !important;color:#fff !important;}
+    input.cell::placeholder{color:#3f3f46;}
+    ::selection{background:#4361FF;color:#fff;}
+    .ffbtn:hover{background:#1b1b22 !important;border-color:#3f3f46 !important;}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;background:#0A0A0A;color:#FAFAFA;font-family:'Inter',sans-serif;padding:40px 48px 80px;">
+  <div style="max-width:1360px;margin:0 auto;">
+
+    <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:8px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 13px 'JetBrains Mono',monospace;letter-spacing:.22em;text-transform:uppercase;color:#7B9CFF;">Fail Fast · Tablero del semestre</div>
+        <h1 style="margin:0;font:700 42px/1.05 'Inter',sans-serif;letter-spacing:-0.03em;color:#FAFAFA;">Presupuesto <span style="color:#52525B;">vs</span> Real — camino a <span style="color:#7B9CFF;">USD 100K MRR</span></h1>
+        <p style="margin:0;font:400 17px/1.5 'Inter';color:#A1A1AA;max-width:760px;">Ingresa cada lunes el cumplimiento de la semana (celdas con borde azul). El tablero, la curva y el semáforo se actualizan solos y se guardan en este navegador.</p>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="ffbtn" onClick="{{ exportCsv }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#E4E4E7;font:600 14px 'Inter';cursor:pointer;">Exportar CSV</button>
+        <button class="ffbtn" onClick="{{ reset }}" style="display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#A1A1AA;font:600 14px 'Inter';cursor:pointer;">Reiniciar</button>
+      </div>
+    </header>
+
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:30px;">
+      <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#7B9CFF;margin-bottom:10px;">MRR actual</div>
+        <div style="font:700 30px/1 'Inter';color:#FFF;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ mrrActualFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#71717A;margin-top:8px;">Semana {{ semActual }} de 26</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">Plan a la fecha</div>
+        <div style="font:700 30px/1 'Inter';color:#E4E4E7;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ planToDateFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">presupuesto semana {{ semActual }}</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">vs Plan</div>
+        <div style="font:700 30px/1 'Inter';letter-spacing:-0.02em;font-variant-numeric:tabular-nums;color:{{ vsPlanCol }};">{{ vsPlanFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">real menos plan</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">% de la meta</div>
+        <div style="font:700 30px/1 'Inter';color:#7B9CFF;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">{{ pctMetaFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">de USD 100K</div>
+      </div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">WoW real</div>
+        <div style="font:700 30px/1 'Inter';letter-spacing:-0.02em;font-variant-numeric:tabular-nums;color:{{ wowCol }};">{{ wowRealFmt }}</div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:8px;">requerido ~6.4%</div>
+      </div>
+      <div style="background:#111113;border:1px solid {{ estadoBorder }};border-radius:16px;padding:20px 22px;">
+        <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#71717A;margin-bottom:10px;">Estado</div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:50%;background:{{ estadoCol }};box-shadow:0 0 12px {{ estadoCol }};flex-shrink:0;"></span><span style="font:700 21px/1 'Inter';color:#FFF;">{{ estadoLabel }}</span></div>
+        <div style="font:500 12px 'Inter';color:#52525B;margin-top:10px;">{{ cierresAcum }} cierres · plan {{ cierresPlanFmt }}</div>
+      </div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:26px 28px 18px;margin-top:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
+        <div style="font:600 16px 'Inter';color:#FAFAFA;">Curva MRR · Plan vs Real</div>
+        <div style="display:flex;gap:20px;font:500 13px 'Inter';color:#A1A1AA;">
+          <span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:22px;height:0;border-top:2.5px dashed #5b5b7a;display:inline-block;"></span>Plan (presupuesto)</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;border-radius:2px;background:#7B9CFF;display:inline-block;"></span>Real ingresado</span>
+        </div>
+      </div>
+      {{ chart }}
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:26px 28px;margin-top:18px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div style="font:600 16px 'Inter';color:#FAFAFA;">Avance por motor · logos hacia la meta del semestre</div>
+        <div style="font:600 14px 'Inter';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ totalLogos }} <span style="color:#52525B;">/ 170 logos · {{ totalPctFmt }}</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">IPS Nivel 1</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segIps.sum }}/15</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segIps.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Transporte TMS</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segTransp.sum }}/20</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segTransp.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Grandes · agente</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segGrandes.sum }}/40</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segGrandes.barW }};"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font:600 14px 'Inter';color:#E4E4E7;">Aliados · Simba</span><span style="font:600 14px 'JetBrains Mono';color:#A1A1AA;font-variant-numeric:tabular-nums;">{{ segAliados.sum }}/95</span></div>
+          <div style="height:10px;border-radius:6px;background:#1f1f24;overflow:hidden;"><div style="height:100%;border-radius:6px;background:linear-gradient(90deg,#7B9CFF,#4361FF);width:{{ segAliados.barW }};"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;margin-top:18px;overflow:hidden;">
+      <div style="padding:22px 28px 16px;font:600 16px 'Inter';color:#FAFAFA;">Captura semanal <span style="font:400 14px 'Inter';color:#71717A;">— llena las celdas azules</span></div>
+      <div style="display:grid;grid-template-columns:50px 100px 116px 96px 84px 70px 70px 70px 70px 64px 96px;gap:0;align-items:center;padding:0 18px;height:42px;background:#15151A;border-top:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#71717A;">
+        <span>Sem</span><span style="text-align:right;">Plan</span><span style="text-align:right;color:#7B9CFF;">MRR real</span><span style="text-align:right;">Var</span><span style="text-align:right;">WoW</span><span style="text-align:right;color:#7B9CFF;">IPS</span><span style="text-align:right;color:#7B9CFF;">Transp</span><span style="text-align:right;color:#7B9CFF;">Grand</span><span style="text-align:right;color:#7B9CFF;">Alia</span><span style="text-align:right;">Σ</span><span style="text-align:right;">Estado</span>
+      </div>
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="26">
+        <div style="display:grid;grid-template-columns:50px 100px 116px 96px 84px 70px 70px 70px 70px 64px 96px;gap:0;align-items:center;padding:0 18px;height:46px;border-top:1px solid #16161a;font-variant-numeric:tabular-nums;background:{{ r.rowBg }};">
+          <span style="font:600 14px 'Inter';color:#71717A;">{{ r.sem }}</span>
+          <span style="text-align:right;font:500 14px 'Inter';color:#71717A;">{{ r.planFmt }}</span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.real }}" data-i="{{ r.i }}" onChange="{{ onMrr }}" placeholder="—" style="width:96px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 9px;color:#E4E4E7;font:600 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;font:600 13px 'Inter';color:{{ r.varCol }};">{{ r.varFmt }}</span>
+          <span style="text-align:right;font:600 13px 'Inter';color:{{ r.wowCol }};">{{ r.wowFmt }}</span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.ips }}" data-i="{{ r.i }}" onChange="{{ onIps }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.transp }}" data-i="{{ r.i }}" onChange="{{ onTransp }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.grandes }}" data-i="{{ r.i }}" onChange="{{ onGrandes }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;"><input class="cell" type="number" value="{{ r.aliados }}" data-i="{{ r.i }}" onChange="{{ onAliados }}" placeholder="0" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:8px;padding:7px 8px;color:#E4E4E7;font:500 14px 'Inter';font-variant-numeric:tabular-nums;"></span>
+          <span style="text-align:right;font:600 14px 'Inter';color:#A1A1AA;">{{ r.cierresSem }}</span>
+          <span style="text-align:right;"><span style="display:inline-block;padding:4px 10px;border-radius:9999px;font:600 11px 'JetBrains Mono';letter-spacing:.04em;background:{{ r.estadoBg }};color:{{ r.estadoCol }};">{{ r.estado }}</span></span>
+        </div>
+      </sc-for>
+    </div>
+
+    <p style="margin:22px 2px 0;font:400 13px/1.5 'Inter';color:#52525B;max-width:1100px;">Plan = curva YC de $20K a $100K en 26 semanas (~6.4% WoW). El semáforo compara tu MRR real contra el plan de esa semana: <span style="color:#3fb950;">en meta</span> ≥ plan · <span style="color:#e0a567;">cerca</span> a &lt;10% · <span style="color:#d64545;">atrasado</span> &gt;10%. Cifras de plan y mezcla: datos internos Fail Fast. Complementa el deck «Estrategia del semestre».</p>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  GOAL = 100000;
+  START = 20000;
+  WOW_REQ = 0.0638575;
+  KEY = 'ff_tracker_v1';
+  TARGETS = { ips: 15, transp: 20, grandes: 40, aliados: 95 };
+  // week 0 = arranque; weeks 1..26 plan (MRR, cierres acumulados) — datos del Excel
+  PLAN = [
+    { w:0, mrr:20000, cum:0 }, { w:1, mrr:21277, cum:2.7 }, { w:2, mrr:22636, cum:5.6 },
+    { w:3, mrr:24081, cum:8.7 }, { w:4, mrr:25619, cum:11.9 }, { w:5, mrr:27255, cum:15.4 },
+    { w:6, mrr:28996, cum:19.1 }, { w:7, mrr:30847, cum:23.1 }, { w:8, mrr:32817, cum:27.2 },
+    { w:9, mrr:34913, cum:31.7 }, { w:10, mrr:37142, cum:36.4 }, { w:11, mrr:39514, cum:41.5 },
+    { w:12, mrr:42037, cum:46.8 }, { w:13, mrr:44721, cum:52.5 }, { w:14, mrr:47577, cum:58.6 },
+    { w:15, mrr:50615, cum:65.1 }, { w:16, mrr:53847, cum:71.9 }, { w:17, mrr:57286, cum:79.2 },
+    { w:18, mrr:60944, cum:87 }, { w:19, mrr:64836, cum:95.3 }, { w:20, mrr:68976, cum:104.1 },
+    { w:21, mrr:73381, cum:113.4 }, { w:22, mrr:78067, cum:123.4 }, { w:23, mrr:83052, cum:134 },
+    { w:24, mrr:88355, cum:145.3 }, { w:25, mrr:93998, cum:157.2 }, { w:26, mrr:100000, cum:170 }
+  ];
+
+  state = { weeks: this.loadWeeks() };
+
+  freshWeeks() {
+    return Array.from({ length: 26 }, () => ({ mrr:null, ips:null, transp:null, grandes:null, aliados:null }));
+  }
+  loadWeeks() {
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      if (raw) {
+        const a = JSON.parse(raw);
+        if (Array.isArray(a) && a.length === 26) return a;
+      }
+    } catch (e) {}
+    return this.freshWeeks();
+  }
+  persist(weeks) { try { localStorage.setItem(this.KEY, JSON.stringify(weeks)); } catch (e) {} }
+
+  setCell(i, field, raw) {
+    const num = (raw === '' || raw == null) ? null : Number(raw);
+    this.setState((s) => {
+      const weeks = s.weeks.map((w, idx) => idx === i ? { ...w, [field]: (num != null && isNaN(num)) ? null : num } : w);
+      this.persist(weeks);
+      return { weeks };
+    });
+  }
+
+  num(v) { return (v == null || v === '') ? null : Number(v); }
+  f(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  buildChart(weeks, lastIdx) {
+    const R = React.createElement;
+    const W = 1000, H = 320, padL = 60, padR = 22, padT = 16, padB = 30;
+    const x0 = padL, x1 = W - padR, y0 = H - padB, y1 = padT;
+    const sx = (w) => x0 + (w / 26) * (x1 - x0);
+    const sy = (v) => y0 - (v / this.GOAL) * (y0 - y1);
+    const kids = [];
+    const ticks = [0, 20000, 40000, 60000, 80000, 100000];
+    ticks.forEach((t) => {
+      const y = sy(t);
+      kids.push(R('line', { key: 'g' + t, x1: x0, x2: x1, y1: y, y2: y, stroke: t === 100000 ? '#33334a' : '#1c1c22', strokeWidth: 1, strokeDasharray: t === 100000 ? '5 5' : null }));
+      kids.push(R('text', { key: 'gt' + t, x: x0 - 10, y: y + 4, textAnchor: 'end', fill: '#52525B', fontSize: 12, fontFamily: 'JetBrains Mono' }, t === 0 ? '$0' : '$' + (t / 1000) + 'K'));
+    });
+    for (let w = 0; w <= 26; w += 2) {
+      kids.push(R('text', { key: 'x' + w, x: sx(w), y: y0 + 19, textAnchor: 'middle', fill: '#52525B', fontSize: 11, fontFamily: 'JetBrains Mono' }, 'S' + w));
+    }
+    const planPts = this.PLAN.map((p) => sx(p.w).toFixed(1) + ',' + sy(p.mrr).toFixed(1)).join(' ');
+    const realArr = [{ w: 0, v: this.START }];
+    weeks.forEach((wk, i) => { const v = this.num(wk.mrr); if (v != null) realArr.push({ w: i + 1, v }); });
+    const realPts = realArr.map((p) => sx(p.w).toFixed(1) + ',' + sy(p.v).toFixed(1)).join(' ');
+    kids.push(R('defs', { key: 'defs' }, R('linearGradient', { id: 'rg', x1: 0, y1: 0, x2: 0, y2: 1 },
+      R('stop', { offset: '0%', stopColor: '#7B9CFF', stopOpacity: 0.32 }),
+      R('stop', { offset: '100%', stopColor: '#7B9CFF', stopOpacity: 0 }))));
+    kids.push(R('polyline', { key: 'plan', points: planPts, fill: 'none', stroke: '#5b5b7a', strokeWidth: 2.5, strokeDasharray: '6 5' }));
+    if (realArr.length > 1) {
+      const area = sx(realArr[0].w).toFixed(1) + ',' + y0 + ' ' + realPts + ' ' + sx(realArr[realArr.length - 1].w).toFixed(1) + ',' + y0;
+      kids.push(R('polygon', { key: 'area', points: area, fill: 'url(#rg)' }));
+      kids.push(R('polyline', { key: 'real', points: realPts, fill: 'none', stroke: '#7B9CFF', strokeWidth: 3, strokeLinejoin: 'round' }));
+    }
+    realArr.forEach((p, idx) => {
+      const last = idx === realArr.length - 1;
+      kids.push(R('circle', { key: 'c' + idx, cx: sx(p.w), cy: sy(p.v), r: last ? 5.5 : 3.5, fill: last ? '#FFFFFF' : '#7B9CFF', stroke: '#7B9CFF', strokeWidth: last ? 3 : 0 }));
+    });
+    return R('svg', { viewBox: '0 0 ' + W + ' ' + H, style: { width: '100%', height: 'auto', display: 'block' } }, kids);
+  }
+
+  csvDownload() {
+    const rows = [['Semana', 'Plan MRR', 'MRR real', 'Var', 'WoW', 'IPS', 'Transporte', 'Grandes', 'Aliados', 'Cierres semana']];
+    this.state.weeks.forEach((w, i) => {
+      const plan = this.PLAN[i + 1].mrr;
+      const real = this.num(w.mrr);
+      const prev = i === 0 ? this.START : this.num(this.state.weeks[i - 1].mrr);
+      const wow = (real != null && prev != null && prev > 0) ? ((real - prev) / prev * 100).toFixed(2) + '%' : '';
+      const cs = (this.num(w.ips) || 0) + (this.num(w.transp) || 0) + (this.num(w.grandes) || 0) + (this.num(w.aliados) || 0);
+      rows.push([i + 1, plan, real ?? '', real != null ? real - plan : '', wow, w.ips ?? '', w.transp ?? '', w.grandes ?? '', w.aliados ?? '', cs]);
+    });
+    const csv = rows.map((r) => r.join(',')).join('\n');
+    try {
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'cumplimiento-semanal-failfast.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {}
+  }
+
+  renderVals() {
+    const weeks = this.state.weeks;
+    let lastIdx = -1;
+    for (let i = 0; i < weeks.length; i++) if (this.num(weeks[i].mrr) != null) lastIdx = i;
+
+    const mrrActual = lastIdx >= 0 ? this.num(weeks[lastIdx].mrr) : this.START;
+    const planToDate = this.PLAN[lastIdx + 1 >= 0 ? lastIdx + 1 : 0].mrr;
+    const vsPlan = mrrActual - planToDate;
+    const pctMeta = mrrActual / this.GOAL;
+    let prev = lastIdx <= 0 ? this.START : this.num(weeks[lastIdx - 1].mrr);
+    const wowReal = (lastIdx >= 0 && prev != null && prev > 0) ? (mrrActual - prev) / prev : null;
+
+    let estadoLabel = 'Sin datos', estadoCol = '#52525B', estadoBorder = '#27272A';
+    if (lastIdx >= 0) {
+      if (mrrActual >= planToDate) { estadoLabel = 'En meta'; estadoCol = '#3fb950'; estadoBorder = 'rgba(63,185,80,0.5)'; }
+      else if (mrrActual >= planToDate * 0.9) { estadoLabel = 'Cerca'; estadoCol = '#e0a567'; estadoBorder = 'rgba(224,165,103,0.5)'; }
+      else { estadoLabel = 'Atrasado'; estadoCol = '#d64545'; estadoBorder = 'rgba(214,69,69,0.5)'; }
+    }
+
+    const sumF = (f) => weeks.reduce((a, w) => a + (this.num(w[f]) || 0), 0);
+    const seg = (f, t) => { const sum = sumF(f); return { sum, target: t, barW: Math.min(100, t ? sum / t * 100 : 0).toFixed(0) + '%' }; };
+    const segIps = seg('ips', 15), segTransp = seg('transp', 20), segGrandes = seg('grandes', 40), segAliados = seg('aliados', 95);
+    const totalLogos = segIps.sum + segTransp.sum + segGrandes.sum + segAliados.sum;
+
+    const cierresPlan = lastIdx >= 0 ? this.PLAN[lastIdx + 1].cum : 0;
+
+    const rows = weeks.map((w, i) => {
+      const plan = this.PLAN[i + 1].mrr;
+      const real = this.num(w.mrr);
+      const p = i === 0 ? this.START : this.num(weeks[i - 1].mrr);
+      const wow = (real != null && p != null && p > 0) ? (real - p) / p : null;
+      const cs = (this.num(w.ips) || 0) + (this.num(w.transp) || 0) + (this.num(w.grandes) || 0) + (this.num(w.aliados) || 0);
+      const vm = real != null ? real - plan : null;
+      let estado = '—', col = '#52525B', bg = 'rgba(82,82,91,0.12)';
+      if (real != null) {
+        if (real >= plan) { estado = 'En meta'; col = '#3fb950'; bg = 'rgba(63,185,80,0.13)'; }
+        else if (real >= plan * 0.9) { estado = 'Cerca'; col = '#e0a567'; bg = 'rgba(224,165,103,0.13)'; }
+        else { estado = 'Atrasado'; col = '#d64545'; bg = 'rgba(214,69,69,0.13)'; }
+      }
+      return {
+        i, sem: i + 1, planFmt: this.f(plan),
+        real: w.mrr == null ? '' : w.mrr,
+        ips: w.ips == null ? '' : w.ips, transp: w.transp == null ? '' : w.transp,
+        grandes: w.grandes == null ? '' : w.grandes, aliados: w.aliados == null ? '' : w.aliados,
+        varFmt: vm == null ? '—' : (vm >= 0 ? '+' : '') + this.f(vm),
+        varCol: vm == null ? '#52525B' : (vm >= 0 ? '#3fb950' : '#d64545'),
+        wowFmt: (real != null && wow != null) ? (wow >= 0 ? '+' : '') + (wow * 100).toFixed(1) + '%' : '—',
+        wowCol: (real != null && wow != null) ? (wow >= this.WOW_REQ ? '#3fb950' : wow >= 0 ? '#e0a567' : '#d64545') : '#52525B',
+        cierresSem: cs, estado, estadoCol: col, estadoBg: bg,
+        rowBg: (i === lastIdx) ? 'rgba(123,156,255,0.05)' : 'transparent'
+      };
+    });
+
+    return {
+      chart: this.buildChart(weeks, lastIdx),
+      rows,
+      semActual: lastIdx >= 0 ? lastIdx + 1 : 0,
+      mrrActualFmt: this.f(mrrActual),
+      planToDateFmt: this.f(planToDate),
+      vsPlanFmt: (vsPlan >= 0 ? '+' : '') + this.f(vsPlan),
+      vsPlanCol: lastIdx < 0 ? '#52525B' : (vsPlan >= 0 ? '#3fb950' : '#d64545'),
+      pctMetaFmt: (pctMeta * 100).toFixed(1) + '%',
+      wowRealFmt: wowReal == null ? '—' : (wowReal >= 0 ? '+' : '') + (wowReal * 100).toFixed(1) + '%',
+      wowCol: wowReal == null ? '#52525B' : (wowReal >= this.WOW_REQ ? '#3fb950' : wowReal >= 0 ? '#e0a567' : '#d64545'),
+      estadoLabel, estadoCol, estadoBorder,
+      cierresAcum: totalLogos, cierresPlanFmt: cierresPlan.toFixed(0),
+      segIps, segTransp, segGrandes, segAliados,
+      totalLogos, totalPctFmt: (totalLogos / 170 * 100).toFixed(0) + '%',
+      onMrr: (e) => this.setCell(Number(e.target.dataset.i), 'mrr', e.target.value),
+      onIps: (e) => this.setCell(Number(e.target.dataset.i), 'ips', e.target.value),
+      onTransp: (e) => this.setCell(Number(e.target.dataset.i), 'transp', e.target.value),
+      onGrandes: (e) => this.setCell(Number(e.target.dataset.i), 'grandes', e.target.value),
+      onAliados: (e) => this.setCell(Number(e.target.dataset.i), 'aliados', e.target.value),
+      exportCsv: () => this.csvDownload(),
+      reset: () => { if (window.confirm('¿Borrar todos los datos ingresados? Esta acción no se puede deshacer.')) { const w = this.freshWeeks(); this.persist(w); this.setState({ weeks: w }); } }
+    };
+  }
+}
+</script>
+</body>
+</html>

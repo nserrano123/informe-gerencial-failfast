@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informe gerencial · Fail Fast</title>
+<meta name="description" content="Centro de control comercial de Fail Fast — tablero, plan de ventas y estrategia del semestre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#0A0A0A;color:#FAFAFA;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;}
+  body{min-height:100vh;padding:64px 44px 80px;position:relative;overflow-x:hidden;}
+  .glow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 80% 0%,rgba(123,156,255,0.14),transparent 60%);}
+  .wrap{max-width:1180px;margin:0 auto;position:relative;}
+  .eyebrow{font:600 12px 'JetBrains Mono',monospace;letter-spacing:.24em;text-transform:uppercase;color:#7B9CFF;}
+  .logo{height:34px;width:auto;display:block;margin-bottom:28px;opacity:.96;}
+  h1{font:700 52px/1.04 'Inter',sans-serif;letter-spacing:-0.035em;margin:18px 0 16px;}
+  h1 .soft{background:linear-gradient(110deg,#FFFFFF,#7B9CFF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .lede{font:400 20px/1.5 'Inter',sans-serif;color:#A1A1AA;max-width:760px;}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;margin-top:48px;}
+  .card{display:flex;flex-direction:column;gap:16px;background:#111113;border:1px solid #27272A;border-radius:20px;padding:32px;transition:border-color .16s ease,transform .16s ease,background .16s ease;min-height:280px;}
+  .card:hover{transform:translateY(-4px);border-color:var(--ac,#4361FF);background:linear-gradient(180deg,var(--tint,rgba(123,156,255,0.05)),transparent 55%),#111113;}
+  .card .top{display:flex;align-items:center;justify-content:space-between;}
+  .tag{font:600 11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ac,#7B9CFF);padding:5px 12px;border:1px solid var(--acb,#2d3a6b);border-radius:9999px;}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--ac,#7B9CFF);box-shadow:0 0 0 5px rgba(255,255,255,0.03);}
+  .card h2{font:700 27px/1.15 'Inter',sans-serif;letter-spacing:-0.02em;color:#FFF;}
+  .card p{font:400 16px/1.5 'Inter',sans-serif;color:#A1A1AA;}
+  .card .go{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font:600 15px 'Inter',sans-serif;color:var(--ac,#7B9CFF);}
+  .card .go .arr{transition:transform .16s ease;}
+  .card:hover .go .arr{transform:translateX(4px);}
+  .meta{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-variant-numeric:tabular-nums;}
+  .kpi{display:flex;flex-direction:column;gap:2px;}
+  .kpi b{font:700 19px 'Inter';color:#E4E4E7;}
+  .kpi span{font:500 12px 'Inter';color:#71717A;}
+  .foot{margin-top:46px;display:flex;align-items:flex-start;gap:13px;background:#0E0E10;border:1px solid #1c1c22;border-radius:14px;padding:20px 24px;max-width:860px;}
+  .foot .ic{width:9px;height:9px;border-radius:50%;background:#3fb950;flex-shrink:0;margin-top:6px;}
+  .foot p{font:400 15px/1.55 'Inter';color:#A1A1AA;}
+  .foot b{color:#E4E4E7;font-weight:600;}
+  .credit{margin-top:30px;font:500 12px 'JetBrains Mono',monospace;letter-spacing:.06em;color:#3F3F46;text-transform:uppercase;}
+  @media(max-width:900px){
+    body{padding:44px 22px 60px;}
+    h1{font-size:38px;}
+    .grid{grid-template-columns:1fr;}
+    .card{min-height:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <img class="logo" src="assets/logo-horizontal-white.png" alt="Fail Fast">
+  <div class="eyebrow">Informe gerencial · Centro de control comercial · Colombia</div>
+  <h1>De ~USD 20K a <span class="soft">USD 100K MRR</span><br>este semestre.</h1>
+  <p class="lede">Un solo lugar para operar y contar el plan: el tablero en vivo del pipeline, el plan estratégico de ventas y la estrategia del semestre para junta.</p>
+
+  <div class="grid">
+    <a class="card" style="--ac:#7B9CFF;--acb:#2d3a6b;--tint:rgba(123,156,255,0.08);" href="Tablero%20Comercial%20Fail%20Fast.dc.html">
+      <div class="top"><span class="dot"></span><span class="tag">En vivo · editable</span></div>
+      <h2>Tablero comercial</h2>
+      <p>Embudo por sector, oportunidades entrantes y tablero semanal de presupuesto vs. real. Avanza cada empresa y el MRR probable se recalcula.</p>
+      <div class="meta">
+        <div class="kpi"><b>4</b><span>sectores</span></div>
+        <div class="kpi"><b>Meta share</b><span>editable</span></div>
+        <div class="kpi"><b>Respaldo</b><span>JSON</span></div>
+      </div>
+      <span class="go">Abrir el tablero <span class="arr">→</span></span>
+    </a>
+
+    <a class="card" style="--ac:#5fd0c5;--acb:#2c5450;--tint:rgba(95,208,197,0.08);" href="Plan%20Estrat%C3%A9gico%20de%20Ventas.dc.html">
+      <div class="top"><span class="dot"></span><span class="tag">Deck · 23</span></div>
+      <h2>Plan estratégico de ventas</h2>
+      <p>Cómo el equipo llega a la meta: motores, embudo por sector, capacidad, partners, eventos y el puente a USD 100K.</p>
+      <span class="go">Ver el plan <span class="arr">→</span></span>
+    </a>
+
+    <a class="card" style="--ac:#e0a567;--acb:#5e4a2b;--tint:rgba(224,165,103,0.08);" href="Estrategia%20Semestre%20%C2%B7%20Junta.dc.html">
+      <div class="top"><span class="dot"></span><span class="tag">Deck · junta</span></div>
+      <h2>Estrategia del semestre</h2>
+      <p>La narrativa para junta: mercado, moat, los tres motores y la tesis de crecimiento eficiente en capital.</p>
+      <span class="go">Ver la estrategia <span class="arr">→</span></span>
+    </a>
+  </div>
+
+  <div class="foot">
+    <span class="ic"></span>
+    <p>Tus datos del tablero se guardan en <b>este navegador</b> y persisten entre recargas. Para moverlos a otro dispositivo o respaldarlos, usa <b>↓ Respaldo</b> en el tablero y <b>↑ Restaurar</b> en el otro equipo.</p>
+  </div>
+
+  <div class="credit">Fail Fast · failfast.ai · Confidencial</div>
+</div>
+</body>
+</html>

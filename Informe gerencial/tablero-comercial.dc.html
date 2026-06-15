@@ -57,7 +57,7 @@
   <sc-if value="{{ isPipeline }}" hint-placeholder-val="{{ true }}">
   <div>
     <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px;">
-      <p style="margin:0;font:400 15px/1.5 'Inter';color:#A1A1AA;max-width:980px;">Universo objetivo de Colombia: TMS por departamento, IPS de Bogotá, Grandes Contribuyentes (DIAN) y la base de migración Simba WEB. Avanza cada empresa por etapas y ajusta su probabilidad; el embudo y el MRR probable se recalculan y se guardan en este navegador.</p>
+      <p style="margin:0;font:400 15px/1.5 'Inter';color:#A1A1AA;max-width:980px;">Universo objetivo de Colombia: TMS por departamento, IPS de Bogotá, Grandes Contribuyentes (DIAN), Construcción (canal SAO · $79/usuario × 8) y la base de migración Simba WEB. Avanza cada empresa por etapas y ajusta su probabilidad; el embudo y el MRR probable se recalculan y se guardan en este navegador.</p>
     </header>
 
     <sc-if value="{{ pNotLoaded }}" hint-placeholder-val="{{ true }}">
@@ -66,7 +66,7 @@
 
     <sc-if value="{{ pLoaded }}" hint-placeholder-val="{{ false }}">
     <div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
         <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
           <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#7B9CFF;"></span><span style="font:700 19px 'Inter';color:#FAFAFA;">Transporte · TMS</span></div>
@@ -171,6 +171,32 @@
             </div>
           </div>
         </div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#e8845e;"></span><span style="font:700 18px 'Inter';color:#FAFAFA;">Construcción · SAO</span></div>
+            <div style="font:500 12px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ totC }} · MRR prob. <span style="color:#e8845e;">{{ probCfmt }}</span></div>
+          </div>
+          <sc-for list="{{ funnelC }}" as="s" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:90px 1fr 96px;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+              <div style="height:36px;display:flex;align-items:center;"><div style="height:36px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 15px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+              <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+            </div>
+          </sc-for>
+          <div style="margin-top:15px;padding-top:14px;border-top:1px solid #1f1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font:600 10px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;color:#71717A;">Meta share</span>
+              <div style="display:flex;align-items:center;gap:3px;background:#0A0A0A;border:1px solid #2c2c32;border-radius:8px;padding:4px 9px;">
+                <input type="text" inputmode="numeric" value="{{ msCpct }}" onInput="{{ onMsC }}" style="width:30px;border:none;outline:none;background:transparent;color:#FAFAFA;font:700 15px 'JetBrains Mono';text-align:right;font-variant-numeric:tabular-nums;"/>
+                <span style="font:600 13px 'Inter';color:#71717A;">%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font:700 17px 'JetBrains Mono';color:#e8845e;font-variant-numeric:tabular-nums;line-height:1.15;">{{ msCval }}</div>
+              <div style="font:500 10px 'Inter';color:#52525B;font-variant-numeric:tabular-nums;">{{ msCco }} empresas · MRR/mes</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px;">
@@ -186,6 +212,7 @@
         <button class="ffbtn" onClick="{{ addI }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #2d3a6b;color:#7B9CFF;font:600 14px 'Inter';cursor:pointer;">+ IPS</button>
         <button class="ffbtn" onClick="{{ addG }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #5e4a2b;color:#e0a567;font:600 14px 'Inter';cursor:pointer;">+ Grande</button>
         <button class="ffbtn" onClick="{{ addS }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #5b3f78;color:#c792ea;font:600 14px 'Inter';cursor:pointer;">+ Simba WEB</button>
+        <button class="ffbtn" onClick="{{ addC }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #6b4030;color:#e8845e;font:600 14px 'Inter';cursor:pointer;">+ Construcción</button>
         <button class="ffbtn" onClick="{{ exportCsv }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#E4E4E7;font:600 14px 'Inter';cursor:pointer;">Exportar CSV</button>
         <button class="ffbtn" onClick="{{ reset }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:10px;background:#111113;border:1px solid #27272A;color:#71717A;font:600 14px 'Inter';cursor:pointer;">Reiniciar</button>
       </div>
@@ -196,6 +223,7 @@
           <button class="ffbtn" onClick="{{ secI }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabIBorder }};background:{{ tabIBg }};color:{{ tabICol }};font:600 14px 'Inter';cursor:pointer;">IPS</button>
           <button class="ffbtn" onClick="{{ secG }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabGBorder }};background:{{ tabGBg }};color:{{ tabGCol }};font:600 14px 'Inter';cursor:pointer;">Grandes</button>
           <button class="ffbtn" onClick="{{ secS }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabSBorder }};background:{{ tabSBg }};color:{{ tabSCol }};font:600 14px 'Inter';cursor:pointer;">Simba WEB</button>
+          <button class="ffbtn" onClick="{{ secC }}" style="padding:9px 18px;border-radius:9px;border:1px solid {{ tabCBorder }};background:{{ tabCBg }};color:{{ tabCCol }};font:600 14px 'Inter';cursor:pointer;">Construcción</button>
         </div>
         <sc-if value="{{ showDept }}" hint-placeholder-val="{{ true }}">
           <select class="ctrl" value="{{ deptValue }}" onChange="{{ onDept }}" style="padding:9px 14px;border-radius:9px;border:1px solid #27272A;background:#111113;color:#E4E4E7;font:600 13px 'Inter';cursor:pointer;min-width:230px;">
@@ -216,7 +244,7 @@
               <span><span style="display:inline-flex;align-items:center;gap:5px;font:600 10px 'JetBrains Mono';color:{{ c.sectorCol }};"><span style="width:7px;height:7px;border-radius:50%;background:{{ c.sectorCol }};"></span>{{ c.sectorTag }}</span></span>
               <span style="padding-right:10px;"><input class="cell" value="{{ c.nombre }}" data-id="{{ c.id }}" onChange="{{ onNombre }}" placeholder="Nombre de la empresa" style="width:100%;background:transparent;border:1px solid transparent;border-radius:7px;padding:6px 8px;color:#FAFAFA;font:600 13px 'Inter';"></span>
               <span style="font:500 12px 'Inter';color:#71717A;padding-right:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ c.depto }}</span>
-              <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
+              <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="cierre">Cierre</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
               <span style="padding-right:8px;"><input class="cell" type="date" value="{{ c.fecha }}" data-id="{{ c.id }}" onChange="{{ onFecha }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:6px 7px;color:#A1A1AA;font:500 12px 'Inter';"></span>
               <span style="padding-right:8px;"><input class="cell" value="{{ c.responsable }}" data-id="{{ c.id }}" onChange="{{ onResp }}" placeholder="Vendedor" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 8px;color:#E4E4E7;font:500 12px 'Inter';"></span>
               <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.usuarios }}" data-id="{{ c.id }}" onChange="{{ onUsuarios }}" style="width:48px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
@@ -241,7 +269,7 @@
         </div>
       </div>
 
-      <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1220px;">MRR = licencia + usuarios × $/usuario. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa (Contacto 5% · 1ª reunión 20% · Presentación 40% · Propuesta 60% · Adquirió 100%) y la puedes editar por empresa; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. $/usuario por defecto: Transporte $99, IPS $79. Grandes por defecto: licencia agente $100 + 5 usuarios × $99. Promedio asumido: 5 usuarios por empresa. Migración Simba WEB: $29/usuario × 2 = $58/cuenta por defecto ({{ totS }} empresas). Datos internos Fail Fast.</p>
+      <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1220px;">MRR = licencia + usuarios × $/usuario. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa (Contacto 5% · 1ª reunión 20% · Presentación 40% · Propuesta 60% · Cierre 85% · Adquirió 100%) y la puedes editar por empresa; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. $/usuario por defecto: Transporte $99, IPS $49, Construcción (SAO) $79 × 8, Simba WEB $29 × 2. Datos internos Fail Fast.</p>
     </div>
     </sc-if>
   </div>
@@ -259,28 +287,34 @@
       </div>
     </header>
 
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px;">
       <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Oportunidades</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ inbCount }}</div></div>
       <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Reuniones agendadas</div><div style="font:700 26px 'Inter';color:#5fd0c5;font-variant-numeric:tabular-nums;">{{ inbReuniones }}</div></div>
       <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">MRR potencial</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ inbMrrFmt }}</div></div>
       <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR probable</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ inbProbFmt }}</div></div>
+      <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Implementación (único)</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ inbImplemFmt }}</div><div style="font:500 10px 'Inter';color:#52525B;margin-top:3px;">ingreso, no suma al MRR</div></div>
     </div>
 
     <div style="background:#111113;border:1px solid #27272A;border-radius:18px;overflow-x:auto;">
-      <div style="min-width:1200px;">
-        <div style="display:grid;grid-template-columns:130px 230px 140px 116px 128px 58px 66px 88px 70px 96px 30px;gap:0;align-items:center;padding:0 16px;height:44px;background:#15151A;border-bottom:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#71717A;">
-          <span>Sector</span><span>Empresa / contacto</span><span>Etapa</span><span>Fecha reunión</span><span>Responsable</span><span style="text-align:right;">Usu.</span><span style="text-align:right;">$/usu</span><span style="text-align:right;">MRR</span><span style="text-align:right;">Prob.</span><span style="text-align:right;">MRR prob.</span><span></span>
+      <div style="min-width:1410px;">
+        <div style="display:grid;grid-template-columns:116px 176px 112px 102px 102px 44px 50px 50px 50px 50px 48px 78px 64px 52px 84px 28px;gap:0;align-items:center;padding:0 16px;height:44px;background:#15151A;border-bottom:1px solid #27272A;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#71717A;">
+          <span>Sector</span><span>Empresa / contacto</span><span>Etapa</span><span>Fecha reunión</span><span>Responsable</span><span style="text-align:right;">Usu.</span><span style="text-align:right;">$/usu</span><span style="text-align:right;">Nómina</span><span style="text-align:right;">$/empl</span><span style="text-align:right;">Multi%</span><span style="text-align:right;">Mult.#</span><span style="text-align:right;">MRR</span><span style="text-align:right;">Implem.</span><span style="text-align:right;">Prob.</span><span style="text-align:right;">MRR prob.</span><span></span>
         </div>
         <sc-for list="{{ inbRows }}" as="c" hint-placeholder-count="3">
-          <div style="display:grid;grid-template-columns:130px 230px 140px 116px 128px 58px 66px 88px 70px 96px 30px;gap:0;align-items:center;padding:0 16px;height:48px;border-bottom:1px solid #16161a;font-variant-numeric:tabular-nums;">
-            <span style="padding-right:8px;"><select class="cell" value="{{ c.sector }}" data-id="{{ c.id }}" onChange="{{ onInbSector }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.sectorCol }};font:600 12px 'Inter';cursor:pointer;"><option value="transporte">Transporte</option><option value="ips">IPS</option><option value="grandes">Grandes</option><option value="simba">Simba WEB</option><option value="otro">Otro</option></select></span>
+          <div style="display:grid;grid-template-columns:116px 176px 112px 102px 102px 44px 50px 50px 50px 50px 48px 78px 64px 52px 84px 28px;gap:0;align-items:center;padding:0 16px;height:48px;border-bottom:1px solid #16161a;font-variant-numeric:tabular-nums;">
+            <span style="padding-right:8px;"><select class="cell" value="{{ c.sector }}" data-id="{{ c.id }}" onChange="{{ onInbSector }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.sectorCol }};font:600 12px 'Inter';cursor:pointer;"><option value="transporte">Transporte</option><option value="ips">IPS</option><option value="grandes">Grandes</option><option value="simba">Simba WEB</option><option value="construccion">Construcción</option><option value="otro">Otro</option></select></span>
             <span style="padding-right:10px;"><input class="cell" value="{{ c.nombre }}" data-id="{{ c.id }}" onChange="{{ onInbNombre }}" placeholder="Empresa o contacto" style="width:100%;background:transparent;border:1px solid transparent;border-radius:7px;padding:6px 8px;color:#FAFAFA;font:600 13px 'Inter';"></span>
-            <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onInbEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
+            <span style="padding-right:8px;"><select class="cell" value="{{ c.etapa }}" data-id="{{ c.id }}" onChange="{{ onInbEtapa }}" style="width:100%;background:{{ c.etapaBg }};border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:{{ c.etapaCol }};font:600 12px 'Inter';cursor:pointer;"><option value="contacto">Contacto</option><option value="reunion">1ª reunión</option><option value="presentacion">Presentación</option><option value="propuesta">Propuesta</option><option value="cierre">Cierre</option><option value="ganada">Adquirió ✓</option><option value="perdida">No adquirió ✕</option></select></span>
             <span style="padding-right:8px;"><input class="cell" type="date" value="{{ c.fecha }}" data-id="{{ c.id }}" onChange="{{ onInbFecha }}" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:6px 7px;color:#A1A1AA;font:500 12px 'Inter';"></span>
             <span style="padding-right:8px;"><input class="cell" value="{{ c.responsable }}" data-id="{{ c.id }}" onChange="{{ onInbResp }}" placeholder="Responsable" style="width:100%;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 8px;color:#E4E4E7;font:500 12px 'Inter';"></span>
             <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.usuarios }}" data-id="{{ c.id }}" onChange="{{ onInbUsuarios }}" style="width:48px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
-            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.valorUsuario }}" data-id="{{ c.id }}" onChange="{{ onInbValor }}" style="width:54px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.valorUsuario }}" data-id="{{ c.id }}" onChange="{{ onInbValor }}" style="width:48px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.empNomina }}" data-id="{{ c.id }}" onChange="{{ onInbEmpN }}" style="width:44px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.valorEmp }}" data-id="{{ c.id }}" onChange="{{ onInbValEmp }}" style="width:44px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#E4E4E7;font:600 13px 'Inter';"></span>
+            <span style="display:flex;align-items:center;justify-content:flex-end;gap:1px;padding-right:6px;"><input class="cell" type="number" value="{{ c.multiPct }}" data-id="{{ c.id }}" onChange="{{ onInbMulti }}" style="width:32px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 4px;color:#E4E4E7;font:600 12px 'Inter';"><span style="font:600 10px 'JetBrains Mono';color:#52525B;">%</span></span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.multiCount }}" data-id="{{ c.id }}" onChange="{{ onInbMultiN }}" placeholder="0" style="width:38px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 5px;color:#E4E4E7;font:600 12px 'Inter';"></span>
             <span style="text-align:right;font:600 13px 'Inter';color:#E4E4E7;padding-right:8px;">{{ c.mrrFmt }}</span>
+            <span style="text-align:right;padding-right:6px;"><input class="cell" type="number" value="{{ c.implem }}" data-id="{{ c.id }}" onChange="{{ onInbImplem }}" placeholder="0" style="width:62px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 6px;color:#3fb950;font:600 12px 'Inter';"></span>
             <span style="display:flex;align-items:center;justify-content:flex-end;gap:2px;padding-right:6px;"><input class="cell" type="number" value="{{ c.prob }}" data-id="{{ c.id }}" onChange="{{ onInbProb }}" style="width:42px;text-align:right;background:#15151A;border:1px solid #2d2d3a;border-radius:7px;padding:7px 5px;color:#A1A1AA;font:600 12px 'Inter';"><span style="font:600 11px 'JetBrains Mono';color:#52525B;">%</span></span>
             <span style="text-align:right;font:700 13px 'Inter';color:#7B9CFF;padding-right:8px;">{{ c.mrrProbFmt }}</span>
             <span style="text-align:center;"><span class="delx" onClick="{{ c.del }}" style="cursor:pointer;color:#52525B;font:600 18px 'Inter';line-height:1;">×</span></span>
@@ -290,7 +324,7 @@
       </div>
     </div>
 
-    <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1100px;">MRR = usuarios × $/usuario. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa y es editable por oportunidad; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. Usa este tab para los leads que entran y muévelos al embudo cuando se confirmen. Datos internos Fail Fast.</p>
+    <p style="margin:22px 2px 0;font:400 13px/1.6 'Inter';color:#52525B;max-width:1240px;">MRR = usuarios × $/usuario + empleados de nómina × $/empleado + multiempresa. <strong style="color:#71717A;">Multiempresa</strong> = <strong style="color:#71717A;">Mult.#</strong> (cuántas) × Multi% × (usuarios×$/usu + nómina×$/empl) — p.ej. 10 multiempresas al 10% suman el 100% de esa base. <strong style="color:#71717A;">Implementación</strong> es un ingreso único y <strong style="color:#71717A;">no</strong> suma al MRR. <strong style="color:#71717A;">Prob.</strong> arranca según la etapa y es editable; <strong style="color:#71717A;">MRR probable</strong> = MRR × Prob. Datos internos Fail Fast.</p>
   </div>
   </sc-if>
 
@@ -411,9 +445,9 @@ class Component extends DCLogic {
   PKEY = 'ff_pipeline_v2';
   PAGE = 50;
   ORDER = ['contacto', 'reunion', 'presentacion', 'propuesta', 'ganada'];
-  PROB = { contacto: 0.05, reunion: 0.20, presentacion: 0.40, propuesta: 0.60, ganada: 1, perdida: 0 };
-  LABEL = { contacto: 'Contacto', reunion: '1ª reunión', presentacion: 'Presentación', propuesta: 'Propuesta', ganada: 'Adquirió', perdida: 'No adquirió' };
-  STAGECOL = { contacto: '#3a4a78', reunion: '#45579c', presentacion: '#5169c4', propuesta: '#7B9CFF', ganada: '#3fb950' };
+  PROB = { contacto: 0.05, reunion: 0.20, presentacion: 0.40, propuesta: 0.60, cierre: 0.85, ganada: 1, perdida: 0 };
+  LABEL = { contacto: 'Contacto', reunion: '1ª reunión', presentacion: 'Presentación', propuesta: 'Propuesta', cierre: 'Cierre', ganada: 'Adquirió', perdida: 'No adquirió' };
+  STAGECOL = { contacto: '#3a4a78', reunion: '#45579c', presentacion: '#5169c4', propuesta: '#7B9CFF', cierre: '#56b88a', ganada: '#3fb950' };
 
   // ---------- inbound config ----------
   IKEY = 'ff_inbound_v1';
@@ -459,7 +493,7 @@ class Component extends DCLogic {
 
   applyDeepLink() {
     try {
-      const valid = ['transporte', 'ips', 'grandes', 'simba'];
+      const valid = ['transporte', 'ips', 'grandes', 'simba', 'construccion'];
       let s = null;
       const hash = (window.location.hash || '').replace(/^#/, '');
       const hp = new URLSearchParams(hash);
@@ -480,14 +514,19 @@ class Component extends DCLogic {
   loadProg() { try { const r = localStorage.getItem(this.PKEY); if (r) { const o = JSON.parse(r); return { ov: o.ov || {}, add: o.add || [], del: o.del || [] }; } } catch (e) {} return { ov: {}, add: [], del: [] }; }
   persistP(prog) { try { localStorage.setItem(this.PKEY, JSON.stringify(prog)); } catch (e) {} }
 
-  defVal(s) { return s === 'ips' ? 49 : (s === 'simba' ? 29 : 99); }
-  defUsuarios(s) { return s === 'simba' ? 2 : (s === 'ips' ? 3 : 5); }
+  defVal(s) { return s === 'ips' ? 49 : (s === 'simba' ? 29 : (s === 'construccion' ? 79 : 99)); }
+  defUsuarios(s) { return s === 'simba' ? 2 : (s === 'ips' ? 3 : (s === 'construccion' ? 8 : 5)); }
   defLic(s) { return s === 'grandes' ? 100 : 0; }
+  DEFMP = 10;
+  usuariosRev(c) { return (Number(c.u) || 0) * (Number(c.v) || 0); }
+  nominaRev(c) { return (Number(c.en) || 0) * (Number(c.ev) || 0); }
+  multiRev(c) { return (Number(c.mn) || 0) * (this.usuariosRev(c) + this.nominaRev(c)) * ((Number(c.mp) || 0) / 100); }
+  implemOf(c) { return Number(c.imp) || 0; }
   mrrOf(c) { return (Number(c.l) || 0) + (Number(c.u) || 0) * (Number(c.v) || 0); }
 
   // ---------- market share target ----------
   dealMrr(s) { return this.defLic(s) + this.defUsuarios(s) * this.defVal(s); }
-  loadMs() { const d = { transporte: 5, ips: 5, grandes: 5, simba: 5 }; try { const r = localStorage.getItem(this.MSKEY); if (r) { const o = JSON.parse(r); return { ...d, ...o }; } } catch (e) {} return d; }
+  loadMs() { const d = { transporte: 5, ips: 5, grandes: 5, simba: 5, construccion: 5 }; try { const r = localStorage.getItem(this.MSKEY); if (r) { const o = JSON.parse(r); return { ...d, ...o }; } } catch (e) {} return d; }
   persistMs(ms) { try { localStorage.setItem(this.MSKEY, JSON.stringify(ms)); } catch (e) {} }
   setMs(sector, raw) { const ms = { ...this.state.ms, [sector]: this.clampPct(raw) }; this.persistMs(ms); this.setState({ ms }); }
   msFor(sector, total) { const pct = this.state.ms[sector] ?? 5; const co = Math.round(total * pct / 100); return { pct, co, valFmt: this.f(co * this.dealMrr(sector)) }; }
@@ -554,7 +593,7 @@ class Component extends DCLogic {
   addRow(sector) {
     const prog = this.state.prog;
     const id = 'u' + Date.now() + Math.floor(Math.random() * 1000);
-    const dept = sector === 'transporte' ? (this.state.dept === 'Todos' ? 'Cundinamarca' : this.state.dept) : (sector === 'grandes' ? 'NIT —' : (sector === 'simba' ? 'Simba WEB' : 'Bogotá D.C.'));
+    const dept = sector === 'transporte' ? (this.state.dept === 'Todos' ? 'Cundinamarca' : this.state.dept) : (sector === 'grandes' ? 'NIT —' : (sector === 'simba' ? 'Simba WEB' : (sector === 'construccion' ? 'Construcción' : 'Bogotá D.C.')));
     prog.add = [{ id, s: sector, d: dept, n: '' }, ...prog.add];
     this.persistP(prog);
     this.setState({ prog: { ...prog }, sector, query: '', page: 0 });
@@ -594,17 +633,17 @@ class Component extends DCLogic {
   // ================= INBOUND =================
   loadInbound() { try { const r = localStorage.getItem(this.IKEY); if (r) { const a = JSON.parse(r); if (Array.isArray(a)) return a; } } catch (e) {} return []; }
   persistI(list) { try { localStorage.setItem(this.IKEY, JSON.stringify(list)); } catch (e) {} }
-  mrrUV(c) { return (Number(c.u) || 0) * (Number(c.v) || 0); }
+  mrrUV(c) { return this.usuariosRev(c) + this.nominaRev(c) + this.multiRev(c); }
   addInbound() {
     const id = 'in' + Date.now() + Math.floor(Math.random() * 1000);
-    const row = { id, n: '', s: 'transporte', e: 'contacto', f: '', r: '', u: 5, v: 99, p: null };
+    const row = { id, n: '', s: 'transporte', e: 'contacto', f: '', r: '', u: 5, v: 99, en: 0, ev: 0, mp: 10, mn: 0, imp: 0, p: null };
     const list = [row, ...this.state.inbound];
     this.persistI(list);
     this.setState({ inbound: list });
   }
   setInbound(id, field, raw) {
     let v = raw;
-    if (field === 'u' || field === 'v') { v = raw === '' ? 0 : Number(raw); if (isNaN(v)) v = 0; }
+    if (field === 'u' || field === 'v' || field === 'en' || field === 'ev' || field === 'imp' || field === 'mp' || field === 'mn') { v = raw === '' ? 0 : Number(raw); if (isNaN(v)) v = 0; if (v < 0) v = 0; }
     if (field === 'p') { v = raw === '' ? null : this.clampPct(raw); }
     const list = this.state.inbound.map((c) => c.id === id ? { ...c, [field]: v } : c);
     this.persistI(list);
@@ -616,13 +655,13 @@ class Component extends DCLogic {
     this.setState({ inbound: list });
   }
   csvInbound() {
-    const head = ['Empresa', 'Sector', 'Etapa', 'Fecha reunion', 'Responsable', 'Usuarios', 'Valor por usuario', 'MRR', 'Probabilidad %', 'MRR probable'];
+    const head = ['Empresa', 'Sector', 'Etapa', 'Fecha reunion', 'Responsable', 'Usuarios', 'Valor por usuario', 'Empleados nomina', 'Valor por empleado', 'Cantidad multiempresas', 'Multiempresa %', 'Valor multiempresa', 'MRR', 'Implementacion (unico)', 'Probabilidad %', 'MRR probable'];
     const lines = [head.join(',')];
     this.state.inbound.forEach((c) => {
       const mrr = this.mrrUV(c);
       const prob = Math.round(mrr * this.probFrac(c));
       const q = (s) => '"' + String(s).replace(/"/g, '""') + '"';
-      lines.push([q(c.n), c.s, this.LABEL[c.e], c.f, q(c.r), c.u, c.v, mrr, this.probPct(c), prob].join(','));
+      lines.push([q(c.n), c.s, this.LABEL[c.e], c.f, q(c.r), c.u, c.v, (Number(c.en) || 0), (Number(c.ev) || 0), (Number(c.mn) || 0), (Number(c.mp) || 0), Math.round(this.multiRev(c)), mrr, this.implemOf(c), this.probPct(c), prob].join(','));
     });
     this.download(lines.join('\n'), 'oportunidades-entrantes-failfast.csv');
   }
@@ -731,6 +770,7 @@ class Component extends DCLogic {
     const iList = all.filter((c) => c.s === 'ips');
     const gList = all.filter((c) => c.s === 'grandes');
     const sList = all.filter((c) => c.s === 'simba');
+    const cList = all.filter((c) => c.s === 'construccion');
     const probSum = (l) => l.reduce((a, c) => a + this.mrrOf(c) * this.probFrac(c), 0);
     const ganadas = all.filter((c) => c.e === 'ganada').length;
     const perdidas = all.filter((c) => c.e === 'perdida').length;
@@ -751,9 +791,9 @@ class Component extends DCLogic {
       const prob = mrr * this.probFrac(c);
       return {
         id: c.id, nombre: c.n, depto: c.d, etapa: c.e, fecha: c.f, responsable: c.r, usuarios: c.u, valorUsuario: c.v, licencia: c.l, prob: this.probPct(c),
-        sectorTag: c.s === 'transporte' ? 'TMS' : (c.s === 'ips' ? 'IPS' : (c.s === 'simba' ? 'SW' : 'GC')), sectorCol: c.s === 'transporte' ? '#7B9CFF' : (c.s === 'ips' ? '#5fd0c5' : (c.s === 'simba' ? '#c792ea' : '#e0a567')),
-        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : '#E4E4E7'),
-        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : '#15151A'),
+        sectorTag: c.s === 'transporte' ? 'TMS' : (c.s === 'ips' ? 'IPS' : (c.s === 'simba' ? 'SW' : (c.s === 'construccion' ? 'CN' : 'GC'))), sectorCol: c.s === 'transporte' ? '#7B9CFF' : (c.s === 'ips' ? '#5fd0c5' : (c.s === 'simba' ? '#c792ea' : (c.s === 'construccion' ? '#e8845e' : '#e0a567'))),
+        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : (c.e === 'cierre' ? '#56b88a' : '#E4E4E7')),
+        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : (c.e === 'cierre' ? 'rgba(86,184,138,0.10)' : '#15151A')),
         mrrFmt: this.f(mrr), mrrProbFmt: this.f(prob),
         del: () => this.delRow(c.id)
       };
@@ -766,19 +806,22 @@ class Component extends DCLogic {
     const sTab = (on) => ({ Bg: on ? 'rgba(123,156,255,0.12)' : '#111113', Border: on ? '#4361FF' : '#27272A', Col: on ? '#7B9CFF' : '#A1A1AA' });
     const tt = sTab(st.sector === 'transporte'), tiX = sTab(st.sector === 'ips'), tg = sTab(st.sector === 'grandes');
     const tsX = { Bg: st.sector === 'simba' ? 'rgba(199,146,234,0.14)' : '#111113', Border: st.sector === 'simba' ? '#8b5fb5' : '#27272A', Col: st.sector === 'simba' ? '#c792ea' : '#A1A1AA' };
+    const tcX = { Bg: st.sector === 'construccion' ? 'rgba(232,132,94,0.16)' : '#111113', Border: st.sector === 'construccion' ? '#a85a3d' : '#27272A', Col: st.sector === 'construccion' ? '#e8845e' : '#A1A1AA' };
     const rangeFmt = total === 0 ? '0 empresas' : (start + 1).toLocaleString('en-US') + '–' + Math.min(start + this.PAGE, total).toLocaleString('en-US') + ' de ' + total.toLocaleString('en-US');
 
     return {
       pLoaded: true, pNotLoaded: false,
-      funnelT: this.funnelFor(tList), funnelI: this.funnelFor(iList), funnelG: this.funnelFor(gList), funnelS: this.funnelFor(sList),
-      totT: tList.length, totI: iList.length, totG: gList.length, totS: sList.length,
+      funnelT: this.funnelFor(tList), funnelI: this.funnelFor(iList), funnelG: this.funnelFor(gList), funnelS: this.funnelFor(sList), funnelC: this.funnelFor(cList),
+      totT: tList.length, totI: iList.length, totG: gList.length, totS: sList.length, totC: cList.length,
       msTpct: this.msFor('transporte', tList.length).pct, msTco: this.msFor('transporte', tList.length).co, msTval: this.msFor('transporte', tList.length).valFmt,
       msIpct: this.msFor('ips', iList.length).pct, msIco: this.msFor('ips', iList.length).co, msIval: this.msFor('ips', iList.length).valFmt,
       msGpct: this.msFor('grandes', gList.length).pct, msGco: this.msFor('grandes', gList.length).co, msGval: this.msFor('grandes', gList.length).valFmt,
       msSpct: this.msFor('simba', sList.length).pct, msSco: this.msFor('simba', sList.length).co, msSval: this.msFor('simba', sList.length).valFmt,
+      msCpct: this.msFor('construccion', cList.length).pct, msCco: this.msFor('construccion', cList.length).co, msCval: this.msFor('construccion', cList.length).valFmt,
       onMsT: (e) => this.setMs('transporte', e.target.value), onMsI: (e) => this.setMs('ips', e.target.value),
       onMsG: (e) => this.setMs('grandes', e.target.value), onMsS: (e) => this.setMs('simba', e.target.value),
-      probTfmt: this.f(probSum(tList)), probIfmt: this.f(probSum(iList)), probGfmt: this.f(probSum(gList)), probSfmt: this.f(probSum(sList)),
+      onMsC: (e) => this.setMs('construccion', e.target.value),
+      probTfmt: this.f(probSum(tList)), probIfmt: this.f(probSum(iList)), probGfmt: this.f(probSum(gList)), probSfmt: this.f(probSum(sList)), probCfmt: this.f(probSum(cList)),
       totalEmpresas: all.length, activas: all.length - ganadas - perdidas, ganadas,
       mrrGanadoFmt: this.f(mrrGanado), mrrProbableFmt: this.f(probSum(all)),
       pipeRows: rows, empty: total === 0,
@@ -787,12 +830,14 @@ class Component extends DCLogic {
       tabIBg: tiX.Bg, tabIBorder: tiX.Border, tabICol: tiX.Col,
       tabGBg: tg.Bg, tabGBorder: tg.Border, tabGCol: tg.Col,
       tabSBg: tsX.Bg, tabSBorder: tsX.Border, tabSCol: tsX.Col,
+      tabCBg: tcX.Bg, tabCBorder: tcX.Border, tabCCol: tcX.Col,
       rangeFmt, pageLabel: 'Pág. ' + (page + 1) + ' / ' + pageCount,
-      addT: () => this.addRow('transporte'), addI: () => this.addRow('ips'), addG: () => this.addRow('grandes'), addS: () => this.addRow('simba'),
+      addT: () => this.addRow('transporte'), addI: () => this.addRow('ips'), addG: () => this.addRow('grandes'), addS: () => this.addRow('simba'), addC: () => this.addRow('construccion'),
       secT: () => this.setState({ sector: 'transporte', page: 0 }),
       secI: () => this.setState({ sector: 'ips', page: 0 }),
       secG: () => this.setState({ sector: 'grandes', page: 0 }),
       secS: () => this.setState({ sector: 'simba', page: 0 }),
+      secC: () => this.setState({ sector: 'construccion', page: 0 }),
       onDept: (e) => this.setState({ dept: e.target.value, page: 0 }),
       onQuery: (e) => this.setState({ query: e.target.value, page: 0 }),
       prevPage: () => this.setState((s) => ({ page: Math.max(0, s.page - 1) })),
@@ -816,25 +861,26 @@ class Component extends DCLogic {
 
   inboundVals() {
     const list = this.state.inbound;
-    const sectorCol = (s) => s === 'transporte' ? '#7B9CFF' : (s === 'ips' ? '#5fd0c5' : (s === 'grandes' ? '#e0a567' : (s === 'simba' ? '#c792ea' : '#A1A1AA')));
+    const sectorCol = (s) => s === 'transporte' ? '#7B9CFF' : (s === 'ips' ? '#5fd0c5' : (s === 'grandes' ? '#e0a567' : (s === 'simba' ? '#c792ea' : (s === 'construccion' ? '#e8845e' : '#A1A1AA'))));
     const rows = list.map((c) => {
       const mrr = this.mrrUV(c);
       const prob = mrr * this.probFrac(c);
       return {
-        id: c.id, nombre: c.n, sector: c.s, etapa: c.e, fecha: c.f, responsable: c.r, usuarios: c.u, valorUsuario: c.v, prob: this.probPct(c),
+        id: c.id, nombre: c.n, sector: c.s, etapa: c.e, fecha: c.f, responsable: c.r, usuarios: c.u, valorUsuario: c.v, empNomina: c.en, valorEmp: c.ev, multiPct: c.mp, multiCount: c.mn, implem: c.imp, prob: this.probPct(c),
         sectorCol: sectorCol(c.s),
-        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : '#E4E4E7'),
-        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : '#15151A'),
+        etapaCol: c.e === 'perdida' ? '#d64545' : (c.e === 'ganada' ? '#3fb950' : (c.e === 'cierre' ? '#56b88a' : '#E4E4E7')),
+        etapaBg: c.e === 'ganada' ? 'rgba(63,185,80,0.10)' : (c.e === 'perdida' ? 'rgba(214,69,69,0.10)' : (c.e === 'cierre' ? 'rgba(86,184,138,0.10)' : '#15151A')),
         mrrFmt: this.f(mrr), mrrProbFmt: this.f(prob),
         del: () => this.delInbound(c.id)
       };
     });
     const mrrTotal = list.reduce((a, c) => a + this.mrrUV(c), 0);
     const probTotal = list.reduce((a, c) => a + this.mrrUV(c) * this.probFrac(c), 0);
+    const implemTotal = list.reduce((a, c) => a + this.implemOf(c), 0);
     const reuniones = list.filter((c) => c.f && c.f.length > 0).length;
     return {
       inbRows: rows, inbEmpty: list.length === 0,
-      inbReuniones: reuniones, inbMrrFmt: this.f(mrrTotal), inbProbFmt: this.f(probTotal),
+      inbReuniones: reuniones, inbMrrFmt: this.f(mrrTotal), inbProbFmt: this.f(probTotal), inbImplemFmt: this.f(implemTotal),
       addInb: () => this.addInbound(),
       exportInb: () => this.csvInbound(),
       resetInb: () => { if (window.confirm('¿Vaciar todas las oportunidades entrantes?')) { this.persistI([]); this.setState({ inbound: [] }); } },
@@ -845,6 +891,11 @@ class Component extends DCLogic {
       onInbResp: (e) => this.setInbound(e.target.dataset.id, 'r', e.target.value),
       onInbUsuarios: (e) => this.setInbound(e.target.dataset.id, 'u', e.target.value),
       onInbValor: (e) => this.setInbound(e.target.dataset.id, 'v', e.target.value),
+      onInbEmpN: (e) => this.setInbound(e.target.dataset.id, 'en', e.target.value),
+      onInbValEmp: (e) => this.setInbound(e.target.dataset.id, 'ev', e.target.value),
+      onInbMulti: (e) => this.setInbound(e.target.dataset.id, 'mp', e.target.value),
+      onInbMultiN: (e) => this.setInbound(e.target.dataset.id, 'mn', e.target.value),
+      onInbImplem: (e) => this.setInbound(e.target.dataset.id, 'imp', e.target.value),
       onInbProb: (e) => this.setInbound(e.target.dataset.id, 'p', e.target.value)
     };
   }

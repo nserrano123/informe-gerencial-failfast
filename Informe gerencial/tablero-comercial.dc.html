@@ -199,12 +199,29 @@
         </div>
       </div>
 
+      <div style="margin-top:16px;background:linear-gradient(135deg,rgba(67,97,255,0.10),rgba(63,185,80,0.06)),#0e0e11;border:1px solid #34406e;border-radius:18px;padding:22px 24px;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:16px;">
+          <div>
+            <div style="font:600 11px 'JetBrains Mono';letter-spacing:.14em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR meta · suma de los 5 sectores</div>
+            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;"><span style="font:700 44px/1 'Inter';letter-spacing:-0.02em;color:#FFF;font-variant-numeric:tabular-nums;">{{ msTotalFmt }}</span><span style="font:600 15px 'Inter';color:#71717A;">/ USD 100K objetivo</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font:700 30px/1 'Inter';color:{{ msMetaColor }};font-variant-numeric:tabular-nums;">{{ msPctMeta }}</div>
+            <div style="font:500 12px 'Inter';color:#52525B;margin-top:6px;">{{ msGapLabel }}</div>
+          </div>
+        </div>
+        <div style="height:14px;border-radius:8px;background:#1a1a20;overflow:hidden;border:1px solid #26262d;">
+          <div style="height:100%;width:{{ msPctMetaW }};background:linear-gradient(90deg,#4361FF,#3fb950);border-radius:8px;transition:width .35s ease;"></div>
+        </div>
+        <p style="margin:13px 2px 0;font:400 12px/1.5 'Inter';color:#52525B;">Mueve el <strong style="color:#71717A;">Meta share %</strong> de cada sector arriba para ver cómo la suma se acerca (o supera) los USD 100K de MRR. Cada sector aporta: empresas del universo × share % × MRR por empresa del sector.</p>
+      </div>
+
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px;">
-        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Empresas objetivo</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ totalEmpresas }}</div></div>
-        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">En pipeline activo</div><div style="font:700 26px 'Inter';color:#7B9CFF;font-variant-numeric:tabular-nums;">{{ activas }}</div></div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Mercado direccionable</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ totalEmpresas }}</div><div style="font:500 10px 'Inter';color:#52525B;margin-top:3px;">empresas objetivo (TAM)</div></div>
+        <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">En pipeline activo</div><div style="font:700 26px 'Inter';color:#7B9CFF;font-variant-numeric:tabular-nums;">{{ activas }}</div><div style="font:500 10px 'Inter';color:#52525B;margin-top:3px;">≥ 1ª reunión, sin cerrar</div></div>
         <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Adquiridas</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ ganadas }}</div></div>
         <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">MRR ganado</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ mrrGanadoFmt }}</div></div>
-        <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR probable</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ mrrProbableFmt }}</div></div>
+        <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR meta (share)</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ mrrProbableFmt }}</div><div style="font:500 10px 'Inter';color:#52525B;margin-top:3px;">{{ msPctMeta }} de USD 100K</div></div>
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
@@ -293,6 +310,21 @@
       <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">MRR potencial</div><div style="font:700 26px 'Inter';color:#E4E4E7;font-variant-numeric:tabular-nums;">{{ inbMrrFmt }}</div></div>
       <div style="background:linear-gradient(180deg,rgba(123,156,255,0.08),transparent),#111113;border:1px solid #4361FF;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#7B9CFF;margin-bottom:8px;">MRR probable</div><div style="font:700 26px 'Inter';color:#FFF;font-variant-numeric:tabular-nums;">{{ inbProbFmt }}</div></div>
       <div style="background:#111113;border:1px solid #27272A;border-radius:14px;padding:18px 20px;"><div style="font:600 11px 'JetBrains Mono';letter-spacing:.12em;text-transform:uppercase;color:#71717A;margin-bottom:8px;">Implementación (único)</div><div style="font:700 26px 'Inter';color:#3fb950;font-variant-numeric:tabular-nums;">{{ inbImplemFmt }}</div><div style="font:500 10px 'Inter';color:#52525B;margin-top:3px;">ingreso, no suma al MRR</div></div>
+    </div>
+
+    <div style="background:#111113;border:1px solid #27272A;border-radius:18px;padding:20px 22px;margin-bottom:18px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#7B9CFF;"></span><span style="font:700 18px 'Inter';color:#FAFAFA;">Embudo de oportunidades</span></div>
+        <div style="font:500 12px 'Inter';color:#71717A;font-variant-numeric:tabular-nums;">{{ inbReal }} oportunidades reales (≥ 1ª reunión) · MRR prob. <span style="color:#7B9CFF;">{{ inbRealProbFmt }}</span></div>
+      </div>
+      <sc-for list="{{ inbFunnel }}" as="s" hint-placeholder-count="6">
+        <div style="display:grid;grid-template-columns:108px 1fr 110px;align-items:center;gap:12px;margin-bottom:9px;">
+          <span style="font:600 13px 'Inter';color:#A1A1AA;">{{ s.label }}</span>
+          <div style="height:34px;display:flex;align-items:center;"><div style="height:34px;width:{{ s.widthPct }};min-width:2px;border-radius:9px;background:{{ s.color }};display:flex;align-items:center;justify-content:center;font:700 14px 'Inter';color:#fff;font-variant-numeric:tabular-nums;">{{ s.count }}</div></div>
+          <span style="text-align:right;font:600 12px 'JetBrains Mono';color:#71717A;font-variant-numeric:tabular-nums;">{{ s.moneyFmt }}</span>
+        </div>
+      </sc-for>
+      <p style="margin:12px 2px 0;font:400 12px/1.5 'Inter';color:#52525B;">Las <strong style="color:#71717A;">oportunidades reales</strong> son las que ya pasaron de Contacto (al menos 1ª reunión). Mueve la etapa de cada fila abajo y el embudo se actualiza.</p>
     </div>
 
     <div style="background:#111113;border:1px solid #27272A;border-radius:18px;overflow-x:auto;">
@@ -529,7 +561,8 @@ class Component extends DCLogic {
   loadMs() { const d = { transporte: 5, ips: 5, grandes: 5, simba: 5, construccion: 5 }; try { const r = localStorage.getItem(this.MSKEY); if (r) { const o = JSON.parse(r); return { ...d, ...o }; } } catch (e) {} return d; }
   persistMs(ms) { try { localStorage.setItem(this.MSKEY, JSON.stringify(ms)); } catch (e) {} }
   setMs(sector, raw) { const ms = { ...this.state.ms, [sector]: this.clampPct(raw) }; this.persistMs(ms); this.setState({ ms }); }
-  msFor(sector, total) { const pct = this.state.ms[sector] ?? 5; const co = Math.round(total * pct / 100); return { pct, co, valFmt: this.f(co * this.dealMrr(sector)) }; }
+  msFor(sector, total) { const pct = this.state.ms[sector] ?? 5; const co = Math.round(total * pct / 100); const val = co * this.dealMrr(sector); return { pct, co, val, valFmt: this.f(val) }; }
+  msTotalVal(all) { const secs = ['transporte', 'ips', 'grandes', 'simba', 'construccion']; return secs.reduce((a, s) => a + this.msFor(s, all.filter((c) => c.s === s).length).val, 0); }
 
   // ---------- respaldo / backup ----------
   backupRef = React.createRef();
@@ -607,11 +640,12 @@ class Component extends DCLogic {
     this.setState({ prog: { ...prog } });
   }
 
-  funnelFor(list) {
+  funnelFor(list) { return this.funnelGen(list, (c) => this.mrrOf(c)); }
+  funnelGen(list, mrrFn) {
     const total = list.length;
     return this.ORDER.map((stage, i) => {
       const inStage = list.filter((c) => { if (i === 0) return true; if (c.e === 'perdida') return false; return this.ORDER.indexOf(c.e) >= i; });
-      const money = inStage.reduce((a, c) => a + this.mrrOf(c), 0);
+      const money = inStage.reduce((a, c) => a + mrrFn(c), 0);
       const widthPct = total > 0 ? (inStage.length === 0 ? '0%' : Math.max(13, inStage.length / total * 100).toFixed(1) + '%') : '0%';
       return { key: stage, label: this.LABEL[stage], count: inStage.length, moneyFmt: money > 0 ? this.f(money) : '—', widthPct, color: this.STAGECOL[stage] };
     });
@@ -774,6 +808,10 @@ class Component extends DCLogic {
     const probSum = (l) => l.reduce((a, c) => a + this.mrrOf(c) * this.probFrac(c), 0);
     const ganadas = all.filter((c) => c.e === 'ganada').length;
     const perdidas = all.filter((c) => c.e === 'perdida').length;
+    const ADV = ['reunion', 'presentacion', 'propuesta', 'cierre'];
+    const activas = all.filter((c) => ADV.includes(c.e)).length;
+    const msTotal = this.msTotalVal(all);
+    const pctMeta = Math.min(100, msTotal / 100000 * 100);
     const mrrGanado = all.filter((c) => c.e === 'ganada').reduce((a, c) => a + this.mrrOf(c), 0);
 
     let scope = all.filter((c) => c.s === st.sector);
@@ -822,8 +860,12 @@ class Component extends DCLogic {
       onMsG: (e) => this.setMs('grandes', e.target.value), onMsS: (e) => this.setMs('simba', e.target.value),
       onMsC: (e) => this.setMs('construccion', e.target.value),
       probTfmt: this.f(probSum(tList)), probIfmt: this.f(probSum(iList)), probGfmt: this.f(probSum(gList)), probSfmt: this.f(probSum(sList)), probCfmt: this.f(probSum(cList)),
-      totalEmpresas: all.length, activas: all.length - ganadas - perdidas, ganadas,
-      mrrGanadoFmt: this.f(mrrGanado), mrrProbableFmt: this.f(probSum(all)),
+      totalEmpresas: all.length, activas, ganadas,
+      mrrGanadoFmt: this.f(mrrGanado), mrrProbableFmt: this.f(msTotal),
+      msTotalFmt: this.f(msTotal), msPctMeta: pctMeta.toFixed(1) + '%', msPctMetaW: pctMeta.toFixed(1) + '%',
+      msGapFmt: this.f(Math.max(0, 100000 - msTotal)), msOver: msTotal >= 100000,
+      msMetaColor: msTotal >= 100000 ? '#3fb950' : '#7B9CFF',
+      msGapLabel: msTotal >= 100000 ? ('+' + this.f(msTotal - 100000) + ' sobre la meta') : ('faltan ' + this.f(100000 - msTotal)),
       pipeRows: rows, empty: total === 0,
       showDept: st.sector === 'transporte', deptValue: st.dept, deptOptions, query: st.query,
       tabTBg: tt.Bg, tabTBorder: tt.Border, tabTCol: tt.Col,
@@ -878,8 +920,11 @@ class Component extends DCLogic {
     const probTotal = list.reduce((a, c) => a + this.mrrUV(c) * this.probFrac(c), 0);
     const implemTotal = list.reduce((a, c) => a + this.implemOf(c), 0);
     const reuniones = list.filter((c) => c.f && c.f.length > 0).length;
+    const realOps = list.filter((c) => ['reunion', 'presentacion', 'propuesta', 'cierre', 'ganada'].includes(c.e));
+    const realProb = realOps.reduce((a, c) => a + this.mrrUV(c) * this.probFrac(c), 0);
     return {
       inbRows: rows, inbEmpty: list.length === 0,
+      inbFunnel: this.funnelGen(list, (c) => this.mrrUV(c)), inbReal: realOps.length, inbRealProbFmt: this.f(realProb),
       inbReuniones: reuniones, inbMrrFmt: this.f(mrrTotal), inbProbFmt: this.f(probTotal), inbImplemFmt: this.f(implemTotal),
       addInb: () => this.addInbound(),
       exportInb: () => this.csvInbound(),

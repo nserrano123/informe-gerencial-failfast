@@ -7,9 +7,9 @@ Centro de control comercial de Fail Fast: tablero del pipeline en vivo, plan est
 | Archivo | Qué es |
 |---|---|
 | `index.html` | Página de inicio con accesos a los tres entregables. |
-| `Tablero Comercial Fail Fast.dc.html` | Tablero en vivo: embudo por sector, oportunidades entrantes, tablero semanal, meta de market share editable y **respaldo JSON**. |
-| `Plan Estratégico de Ventas.dc.html` | Deck (23 láminas) del plan de ventas, bilingüe ES/EN. |
-| `Estrategia Semestre · Junta.dc.html` | Deck de estrategia para junta, bilingüe ES/EN. |
+| `tablero-comercial.dc.html` | Tablero en vivo: embudo por sector, oportunidades entrantes, tablero semanal, meta de market share editable y **respaldo JSON**. |
+| `plan-de-ventas.dc.html` | Deck del plan de ventas, bilingüe ES/EN. |
+| `estrategia-semestre.dc.html` | Deck de estrategia para junta, bilingüe ES/EN. |
 | `support.js`, `deck-stage.js` | Runtime de render y motor de slides (no editar). |
 | `pipeline_seed.json` | Universo de empresas objetivo (semilla del tablero). |
 | `_ds/` | Design system Fail Fast (colores, tipografía, componentes). |
